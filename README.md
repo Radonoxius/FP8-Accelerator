@@ -2,8 +2,8 @@
 Still ideating...
 
 ## Members
-Nimesh R Acharya: 241EC137,
+Nimesh R Acharya _aka Radonoxius_ : 241EC137,
 [Contact Nimesh via GMail](mailto:nimeshacharya197@gmail.com)
 
-Adithya Sudhanva Arcot: 241EC102,
+Adithya Sudhanva Arcot _aka adithyaarcot_ : 241EC102,
 [Contact Aditya via GMail](mailto:adithyasudhanvaaarcot@gmail.com)
