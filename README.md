@@ -3,7 +3,7 @@ Ever since `AI and Machine Learning` have gained popularity, there has been an e
 
 One of the popular data types used in quantization is the FP16 type, or the `Half precision Floating Point` data type which uses 16 bits.
 
-This project aims to create a working model of a `Floating Point Unit` for the FP16 type.
+This project aims to create a working model of a `Floating Point Unit` **for the FP16 type**.
 
 ## Members
 Nimesh R Acharya _aka Radonoxius_ : 241EC137,
