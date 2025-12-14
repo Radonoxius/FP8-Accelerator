@@ -1,5 +1,5 @@
 # DSD Miniproject, 2026
-Ever since `AI and Machine Learning` have gained popularity, there has been an ever increasing demand for `GPUs` and similar co-processors. The research involved in this area strives to achieve better `Model` performance by using *fewer parameters and smaller quantization data types*.
+Ever since `AI and Machine Learning` have gained popularity, there has been an ever increasing demand for `GPUs` and similar co-processors. The research involved in this area strives to achieve better `Model` performance by using **fewer parameters and smaller quantization data types**.
 
 One of the popular data types used in quantization is the FP16 type, or the `Half precision Floating Point` data type which uses 16 bits.
 
