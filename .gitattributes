@@ -1,0 +1,6 @@
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.exe.* filter=lfs diff=lfs merge=lfs -text
+*.INI filter=lfs diff=lfs merge=lfs -text
+*.exe !text !filter !merge !diff
+*.INI !text !filter !merge !diff
+*.exe.* !text !filter !merge !diff
