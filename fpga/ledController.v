@@ -1,6 +1,9 @@
 module ledController(
+    input wire clk,
     input wire in,
-    output wire out
+    output reg out
 );
-    assign out = in;
+    always @(posedge clk) begin
+        out <= in;
+    end
 endmodule
