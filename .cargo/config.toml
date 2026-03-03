@@ -1,9 +1,10 @@
 [build]
-target = "armv7-unknown-linux-gnueabihf"
+target = "armv7-unknown-linux-musleabihf"
 
-[target.armv7-unknown-linux-gnueabihf]
+[target.armv7-unknown-linux-musleabihf]
 linker = "arm-linux-gnueabihf-gcc"
 rustflags = [
     "-C", "target-cpu=cortex-a9",
+    "-C", "link-arg=-static",
     "-C", "embed-bitcode=yes", "-C", "lto=yes"
 ]
