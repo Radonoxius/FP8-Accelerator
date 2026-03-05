@@ -21,7 +21,13 @@ impl Status {
     }
 
     pub fn is_denormal(n: &Fp8) -> bool {
-        todo!()
+        if n.get_exponent_bits() == 0 &&
+            n.get_mantissa_bits() != 0 {
+            true
+        }
+        else {
+            false
+        }
     }
 
     pub fn is_inf(n: &Fp8) -> bool {
