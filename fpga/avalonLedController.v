@@ -12,7 +12,5 @@ module avalonLedController (
         
         else if(write)
             led_line <= writedata[0];
-
-        else;
     end
 endmodule
