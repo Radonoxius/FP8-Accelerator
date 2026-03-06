@@ -1,7 +1,8 @@
 use soft_fp8::Fp8;
 
 fn main() {
-    let n = Fp8::new(0b0_1111_000);
-
-    println!("{:?}", n);
+    for i in 0b1000_0000..=0b1111_1111 {
+        let n = Fp8::from(i);
+        println!("{:?}", n);
+    }
 }
