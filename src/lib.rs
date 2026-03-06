@@ -4,12 +4,14 @@ use crate::state::State;
 
 pub mod state;
 
+pub mod addition;
+
 ///Represents an 8 bit, E4M3 floating
 ///point number.
 ///
 ///This format is defined by Nvidia, Arm and Intel for ML use.
 ///
-///**NOTE**: No subnormal support.
+///**NOTE**: No subnormal arithmetic support.
 #[derive(Clone, Copy)]
 pub struct Fp8 {
     pub(crate) byte: u8

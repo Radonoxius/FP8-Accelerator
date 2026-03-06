@@ -3,7 +3,7 @@ use crate::Fp8;
 ///Represents the current state of an FP8 number.
 /// 
 ///Can also by used by operations for signaling.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum State {
     Zero,
     NaN,
