@@ -29,6 +29,23 @@ impl Fp8 {
         }
     }
 
+    ///Create 0.0.
+    pub fn zero() -> Self {
+        Self { byte: 0 }
+    }
+
+    ///Create NaN.
+    pub fn nan() -> Self {
+        Self { byte: 0b0111_1111 }
+    }
+
+    ///Flip the sign bit of the FP8 number.
+    /// 
+    ///Valid for all states, including NaN and zero.
+    pub fn flip_sign(&mut self) {
+        self.byte ^= 0b1000_0000;
+    }
+
     ///Get the sign bit of the FP8 number.
     pub fn get_sign_bit(&self) -> u8 {
         self.byte >> 7
