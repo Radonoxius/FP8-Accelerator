@@ -1,4 +1,10 @@
 fpga/obj_dir
+
+fpga/db
+fpga/incremental_db
+fpga/output_files
+fpga/hps_isw_handoff
+
 sdcard
 
-/target
+target
