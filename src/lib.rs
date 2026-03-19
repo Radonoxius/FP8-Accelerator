@@ -31,12 +31,12 @@ impl Fp8 {
         }
     }
 
-    ///Create 0.0.
+    ///Creates +0.0.
     pub fn zero() -> Self {
         Self { byte: 0 }
     }
 
-    ///Create NaN.
+    ///Creates +NaN.
     pub fn nan() -> Self {
         Self { byte: 0b0111_1111 }
     }
@@ -44,8 +44,10 @@ impl Fp8 {
     ///Flip the sign bit of the FP8 number.
     /// 
     ///Valid for all states, including NaN and zero.
-    pub fn flip_sign(&mut self) {
-        self.byte ^= 0b1000_0000;
+    pub fn flip_sign(self) -> Self {
+        Self {
+            byte: self.byte ^ 0b1000_0000
+        }
     }
 
     ///Get the sign bit of the FP8 number.
@@ -86,10 +88,36 @@ impl Fp8 {
         }
     }
 
-    ///Get the mantissa value (as a regular float) of the FP8 number.
+    ///Get the mantissa value of the FP8 number.
+    ///
+    ///For Normals, the result includes
+    ///the implicit bit, 1 at bit index 3.
+    /// 
+    ///Returns `None` if the number is NaN.
+    pub fn get_mantissa_value(&self) -> Option<u8> {
+        match State::get(self) {
+            State::Zero => {
+                Some(0)
+            },
+
+            State::NaN => {
+                None
+            },
+
+            State::Subnormal => {
+                Some(self.get_mantissa_bits())
+            },
+
+            State::Normal => {
+                Some(8 | self.get_mantissa_bits())
+            }
+        }
+    }
+
+    ///Get the mantissa value of the FP8 number as a float.
     ///
     ///Returns `None` if the number is NaN.
-    pub fn get_mantissa_value(&self) -> Option<f32> {
+    pub fn get_mantissa_value_as_float(&self) -> Option<f32> {
         match State::get(self) {
             State::Zero => {
                 Some(0.0)
@@ -121,7 +149,7 @@ impl Fp8 {
 
 impl Debug for Fp8 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mantissa = self.get_mantissa_value();
+        let mantissa = self.get_mantissa_value_as_float();
         let exponent = self.get_exponent_value();
 
         return {
@@ -149,7 +177,7 @@ impl Debug for Fp8 {
                     write!(
                         f,
                         "-{} x 2 ^ {}",
-                        self.get_mantissa_value().unwrap(),
+                        self.get_mantissa_value_as_float().unwrap(),
                         self.get_exponent_value().unwrap()
                     )
                 }
@@ -157,7 +185,7 @@ impl Debug for Fp8 {
                     write!(
                         f,
                         "{} x 2 ^ {}",
-                        self.get_mantissa_value().unwrap(),
+                        self.get_mantissa_value_as_float().unwrap(),
                         self.get_exponent_value().unwrap()
                     )
                 }

@@ -34,21 +34,41 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
 use crate::{Fp8, state::State};
 
+/// Returns (effective_exponent, mantissa_with_implicit_bit) for a non-zero, non-NaN Fp8.
+fn components(n: &Fp8, state: &State) -> (i32, u32) {
+    match state {
+        State::Normal => (
+            n.get_exponent_value().unwrap() as i32,
+            n.get_mantissa_value().unwrap() as u32
+        ),
+
+        State::Subnormal => (-6, n.get_mantissa_bits() as u32),
+
+        _ => unreachable!(),
+    }
+}
+
 pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let a_state = State::get(a);
     let b_state = State::get(b);
 
     if a_state == State::NaN && b_state == State::NaN {
         return (Fp8::nan(), State::NaN);
-    } else if a_state == State::NaN {
+    }
+    else if a_state == State::NaN {
         return (*a, State::NaN);
-    } else if b_state == State::NaN {
+    }
+    else if b_state == State::NaN {
         return (*b, State::NaN);
-    } else if a_state == State::Zero && b_state == State::Zero {
+    }
+    
+    else if a_state == State::Zero && b_state == State::Zero {
         return (Fp8::zero(), State::Zero);
-    } else if a_state == State::Zero {
+    }
+    else if a_state == State::Zero {
         return (*b, b_state);
-    } else if b_state == State::Zero {
+    }
+    else if b_state == State::Zero {
         return (*a, a_state);
     }
 
@@ -116,13 +136,4 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     }
 
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
-}
-
-/// Returns (effective_exponent, mantissa_with_implicit_bit) for a non-zero, non-NaN Fp8.
-fn components(n: &Fp8, state: &State) -> (i32, u32) {
-    match state {
-        State::Normal    => (n.get_exponent_bits() as i32 - 7, (8 | n.get_mantissa_bits()) as u32),
-        State::Subnormal => (-6, n.get_mantissa_bits() as u32),
-        _                => unreachable!(),
-    }
 }
