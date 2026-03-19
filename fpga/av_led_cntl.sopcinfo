@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="av_led_cntl" kind="av_led_cntl" version="1.0" fabric="QSYS">
  <!-- Format version 25.1 1129 (Future versions may contain additional information.) -->
- <!-- 2026.03.10.16:22:15 -->
+ <!-- 2026.03.19.16:26:51 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1773139922</value>
+  <value>1773917798</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -205,7 +205,7 @@ parameters are a RESULT of the module parameters. -->
     <name>led_line</name>
     <direction>Output</direction>
     <width>1</width>
-    <role>new_signal</role>
+    <role>led_line</role>
    </port>
   </interface>
   <interface name="clock" kind="clock_sink" version="25.1">
@@ -291,7 +291,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>1</value>
+    <value>4</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -596,7 +596,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>writedata</name>
     <direction>Input</direction>
-    <width>8</width>
+    <width>32</width>
     <role>writedata</role>
    </port>
   </interface>
@@ -16170,7 +16170,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>a_led_controller</slaveName>
     <name>avalon_led_periph_0.a_led_controller</name>
     <baseAddress>4096</baseAddress>
-    <span>1</span>
+    <span>4</span>
    </memoryBlock>
   </interface>
  </module>
@@ -41677,7 +41677,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>a_led_controller</slaveName>
     <name>avalon_led_periph_0.a_led_controller</name>
     <baseAddress>4096</baseAddress>
-    <span>1</span>
+    <span>4</span>
    </memoryBlock>
   </interface>
  </module>
@@ -42804,7 +42804,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>a_led_controller</slaveName>
     <name>avalon_led_periph_0.a_led_controller</name>
     <baseAddress>4280291328</baseAddress>
-    <span>1</span>
+    <span>4</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
@@ -43627,7 +43627,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>a_led_controller</slaveName>
     <name>avalon_led_periph_0.a_led_controller</name>
     <baseAddress>4280291328</baseAddress>
-    <span>1</span>
+    <span>4</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>

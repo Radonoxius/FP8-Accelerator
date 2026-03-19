@@ -9,6 +9,14 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
+   element av_led_cntl
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
    element avalon_led_periph_0
    {
       datum _sortIndex
@@ -56,7 +64,7 @@
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
-   name="led"
+   name="led_out"
    internal="avalon_led_periph_0.led_end"
    type="conduit"
    dir="end" />

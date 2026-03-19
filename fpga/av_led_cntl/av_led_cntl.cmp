@@ -1,7 +1,7 @@
 	component av_led_cntl is
 		port (
 			clk_clk            : in    std_logic                     := 'X';             -- clk
-			led_new_signal     : out   std_logic;                                        -- new_signal
+			led_out_led_line   : out   std_logic;                                        -- led_line
 			memory_mem_a       : out   std_logic_vector(14 downto 0);                    -- mem_a
 			memory_mem_ba      : out   std_logic_vector(2 downto 0);                     -- mem_ba
 			memory_mem_ck      : out   std_logic;                                        -- mem_ck

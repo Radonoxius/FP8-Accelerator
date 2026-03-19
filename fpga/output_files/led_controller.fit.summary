@@ -1,12 +1,12 @@
-Fitter Status : Successful - Tue Mar 10 16:34:46 2026
+Fitter Status : Successful - Thu Mar 19 16:32:49 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : led_controller
 Top-level Entity Name : led_controller
 Family : Cyclone V
 Device : 5CSEMA5F31C6
 Timing Models : Final
-Logic utilization (in ALMs) : 189 / 32,070 ( < 1 % )
-Total registers : 408
+Logic utilization (in ALMs) : 97 / 32,070 ( < 1 % )
+Total registers : 347
 Total pins : 132 / 457 ( 29 % )
 Total virtual pins : 0
 Total block memory bits : 0 / 4,065,280 ( 0 % )

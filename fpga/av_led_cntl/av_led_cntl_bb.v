@@ -1,7 +1,6 @@
 
 module av_led_cntl (
 	clk_clk,
-	led_new_signal,
 	memory_mem_a,
 	memory_mem_ba,
 	memory_mem_ck,
@@ -17,10 +16,10 @@ module av_led_cntl (
 	memory_mem_dqs_n,
 	memory_mem_odt,
 	memory_mem_dm,
-	memory_oct_rzqin);	
+	memory_oct_rzqin,
+	led_out_led_line);	
 
 	input		clk_clk;
-	output		led_new_signal;
 	output	[14:0]	memory_mem_a;
 	output	[2:0]	memory_mem_ba;
 	output		memory_mem_ck;
@@ -37,4 +36,5 @@ module av_led_cntl (
 	output		memory_mem_odt;
 	output	[3:0]	memory_mem_dm;
 	input		memory_oct_rzqin;
+	output		led_out_led_line;
 endmodule

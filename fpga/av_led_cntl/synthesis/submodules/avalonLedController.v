@@ -2,7 +2,7 @@ module avalonLedController (
     input wire a_clk,
     input wire reset_n,
     input wire write,
-    input wire [7:0] writedata,
+    input wire [31:0] writedata,
 
     output reg led_line
 );

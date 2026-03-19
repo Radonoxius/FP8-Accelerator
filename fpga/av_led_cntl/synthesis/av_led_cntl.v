@@ -4,24 +4,24 @@
 
 `timescale 1 ps / 1 ps
 module av_led_cntl (
-		input  wire        clk_clk,            //    clk.clk
-		output wire        led_new_signal,     //    led.new_signal
-		output wire [14:0] memory_mem_a,       // memory.mem_a
-		output wire [2:0]  memory_mem_ba,      //       .mem_ba
-		output wire        memory_mem_ck,      //       .mem_ck
-		output wire        memory_mem_ck_n,    //       .mem_ck_n
-		output wire        memory_mem_cke,     //       .mem_cke
-		output wire        memory_mem_cs_n,    //       .mem_cs_n
-		output wire        memory_mem_ras_n,   //       .mem_ras_n
-		output wire        memory_mem_cas_n,   //       .mem_cas_n
-		output wire        memory_mem_we_n,    //       .mem_we_n
-		output wire        memory_mem_reset_n, //       .mem_reset_n
-		inout  wire [31:0] memory_mem_dq,      //       .mem_dq
-		inout  wire [3:0]  memory_mem_dqs,     //       .mem_dqs
-		inout  wire [3:0]  memory_mem_dqs_n,   //       .mem_dqs_n
-		output wire        memory_mem_odt,     //       .mem_odt
-		output wire [3:0]  memory_mem_dm,      //       .mem_dm
-		input  wire        memory_oct_rzqin    //       .oct_rzqin
+		input  wire        clk_clk,            //     clk.clk
+		output wire        led_out_led_line,   // led_out.led_line
+		output wire [14:0] memory_mem_a,       //  memory.mem_a
+		output wire [2:0]  memory_mem_ba,      //        .mem_ba
+		output wire        memory_mem_ck,      //        .mem_ck
+		output wire        memory_mem_ck_n,    //        .mem_ck_n
+		output wire        memory_mem_cke,     //        .mem_cke
+		output wire        memory_mem_cs_n,    //        .mem_cs_n
+		output wire        memory_mem_ras_n,   //        .mem_ras_n
+		output wire        memory_mem_cas_n,   //        .mem_cas_n
+		output wire        memory_mem_we_n,    //        .mem_we_n
+		output wire        memory_mem_reset_n, //        .mem_reset_n
+		inout  wire [31:0] memory_mem_dq,      //        .mem_dq
+		inout  wire [3:0]  memory_mem_dqs,     //        .mem_dqs
+		inout  wire [3:0]  memory_mem_dqs_n,   //        .mem_dqs_n
+		output wire        memory_mem_odt,     //        .mem_odt
+		output wire [3:0]  memory_mem_dm,      //        .mem_dm
+		input  wire        memory_oct_rzqin    //        .oct_rzqin
 	);
 
 	wire         hps_0_h2f_reset_reset;                                            // hps_0:h2f_rst_n -> [rst_controller:reset_in0, rst_controller:reset_in1, rst_controller_001:reset_in0]
@@ -62,13 +62,13 @@ module av_led_cntl (
 	wire         hps_0_h2f_lw_axi_master_awvalid;                                  // hps_0:h2f_lw_AWVALID -> mm_interconnect_0:hps_0_h2f_lw_axi_master_awvalid
 	wire         hps_0_h2f_lw_axi_master_rvalid;                                   // mm_interconnect_0:hps_0_h2f_lw_axi_master_rvalid -> hps_0:h2f_lw_RVALID
 	wire         mm_interconnect_0_avalon_led_periph_0_a_led_controller_write;     // mm_interconnect_0:avalon_led_periph_0_a_led_controller_write -> avalon_led_periph_0:write
-	wire   [7:0] mm_interconnect_0_avalon_led_periph_0_a_led_controller_writedata; // mm_interconnect_0:avalon_led_periph_0_a_led_controller_writedata -> avalon_led_periph_0:writedata
+	wire  [31:0] mm_interconnect_0_avalon_led_periph_0_a_led_controller_writedata; // mm_interconnect_0:avalon_led_periph_0_a_led_controller_writedata -> avalon_led_periph_0:writedata
 	wire         rst_controller_reset_out_reset;                                   // rst_controller:reset_out -> [avalon_led_periph_0:reset_n, mm_interconnect_0:avalon_led_periph_0_reset_reset_bridge_in_reset_reset]
 	wire         rst_controller_001_reset_out_reset;                               // rst_controller_001:reset_out -> mm_interconnect_0:hps_0_h2f_lw_axi_master_agent_clk_reset_reset_bridge_in_reset_reset
 
 	avalonLedController avalon_led_periph_0 (
 		.reset_n   (~rst_controller_reset_out_reset),                                  //            reset.reset_n
-		.led_line  (led_new_signal),                                                   //          led_end.new_signal
+		.led_line  (led_out_led_line),                                                 //          led_end.led_line
 		.a_clk     (clk_clk),                                                          //            clock.clk
 		.write     (mm_interconnect_0_avalon_led_periph_0_a_led_controller_write),     // a_led_controller.write
 		.writedata (mm_interconnect_0_avalon_led_periph_0_a_led_controller_writedata)  //                 .writedata

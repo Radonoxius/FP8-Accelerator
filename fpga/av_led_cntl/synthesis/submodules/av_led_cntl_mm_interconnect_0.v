@@ -47,7 +47,7 @@ module av_led_cntl_mm_interconnect_0 (
 		input  wire        avalon_led_periph_0_reset_reset_bridge_in_reset_reset,               //               avalon_led_periph_0_reset_reset_bridge_in_reset.reset
 		input  wire        hps_0_h2f_lw_axi_master_agent_clk_reset_reset_bridge_in_reset_reset, // hps_0_h2f_lw_axi_master_agent_clk_reset_reset_bridge_in_reset.reset
 		output wire        avalon_led_periph_0_a_led_controller_write,                          //                          avalon_led_periph_0_a_led_controller.write
-		output wire [7:0]  avalon_led_periph_0_a_led_controller_writedata                       //                                                              .writedata
+		output wire [31:0] avalon_led_periph_0_a_led_controller_writedata                       //                                                              .writedata
 	);
 
 	wire          rsp_mux_src_valid;                                                        // rsp_mux:src_valid -> hps_0_h2f_lw_axi_master_agent:write_rp_valid
@@ -62,29 +62,29 @@ module av_led_cntl_mm_interconnect_0 (
 	wire    [1:0] rsp_mux_001_src_channel;                                                  // rsp_mux_001:src_channel -> hps_0_h2f_lw_axi_master_agent:read_rp_channel
 	wire          rsp_mux_001_src_startofpacket;                                            // rsp_mux_001:src_startofpacket -> hps_0_h2f_lw_axi_master_agent:read_rp_startofpacket
 	wire          rsp_mux_001_src_endofpacket;                                              // rsp_mux_001:src_endofpacket -> hps_0_h2f_lw_axi_master_agent:read_rp_endofpacket
-	wire    [7:0] avalon_led_periph_0_a_led_controller_agent_m0_readdata;                   // avalon_led_periph_0_a_led_controller_translator:uav_readdata -> avalon_led_periph_0_a_led_controller_agent:m0_readdata
+	wire   [31:0] avalon_led_periph_0_a_led_controller_agent_m0_readdata;                   // avalon_led_periph_0_a_led_controller_translator:uav_readdata -> avalon_led_periph_0_a_led_controller_agent:m0_readdata
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_waitrequest;                // avalon_led_periph_0_a_led_controller_translator:uav_waitrequest -> avalon_led_periph_0_a_led_controller_agent:m0_waitrequest
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_debugaccess;                // avalon_led_periph_0_a_led_controller_agent:m0_debugaccess -> avalon_led_periph_0_a_led_controller_translator:uav_debugaccess
 	wire   [20:0] avalon_led_periph_0_a_led_controller_agent_m0_address;                    // avalon_led_periph_0_a_led_controller_agent:m0_address -> avalon_led_periph_0_a_led_controller_translator:uav_address
-	wire    [0:0] avalon_led_periph_0_a_led_controller_agent_m0_byteenable;                 // avalon_led_periph_0_a_led_controller_agent:m0_byteenable -> avalon_led_periph_0_a_led_controller_translator:uav_byteenable
+	wire    [3:0] avalon_led_periph_0_a_led_controller_agent_m0_byteenable;                 // avalon_led_periph_0_a_led_controller_agent:m0_byteenable -> avalon_led_periph_0_a_led_controller_translator:uav_byteenable
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_read;                       // avalon_led_periph_0_a_led_controller_agent:m0_read -> avalon_led_periph_0_a_led_controller_translator:uav_read
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_readdatavalid;              // avalon_led_periph_0_a_led_controller_translator:uav_readdatavalid -> avalon_led_periph_0_a_led_controller_agent:m0_readdatavalid
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_lock;                       // avalon_led_periph_0_a_led_controller_agent:m0_lock -> avalon_led_periph_0_a_led_controller_translator:uav_lock
-	wire    [7:0] avalon_led_periph_0_a_led_controller_agent_m0_writedata;                  // avalon_led_periph_0_a_led_controller_agent:m0_writedata -> avalon_led_periph_0_a_led_controller_translator:uav_writedata
+	wire   [31:0] avalon_led_periph_0_a_led_controller_agent_m0_writedata;                  // avalon_led_periph_0_a_led_controller_agent:m0_writedata -> avalon_led_periph_0_a_led_controller_translator:uav_writedata
 	wire          avalon_led_periph_0_a_led_controller_agent_m0_write;                      // avalon_led_periph_0_a_led_controller_agent:m0_write -> avalon_led_periph_0_a_led_controller_translator:uav_write
-	wire    [0:0] avalon_led_periph_0_a_led_controller_agent_m0_burstcount;                 // avalon_led_periph_0_a_led_controller_agent:m0_burstcount -> avalon_led_periph_0_a_led_controller_translator:uav_burstcount
+	wire    [2:0] avalon_led_periph_0_a_led_controller_agent_m0_burstcount;                 // avalon_led_periph_0_a_led_controller_agent:m0_burstcount -> avalon_led_periph_0_a_led_controller_translator:uav_burstcount
 	wire          avalon_led_periph_0_a_led_controller_agent_rf_source_valid;               // avalon_led_periph_0_a_led_controller_agent:rf_source_valid -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_valid
-	wire   [85:0] avalon_led_periph_0_a_led_controller_agent_rf_source_data;                // avalon_led_periph_0_a_led_controller_agent:rf_source_data -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_data
+	wire  [112:0] avalon_led_periph_0_a_led_controller_agent_rf_source_data;                // avalon_led_periph_0_a_led_controller_agent:rf_source_data -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_data
 	wire          avalon_led_periph_0_a_led_controller_agent_rf_source_ready;               // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_ready -> avalon_led_periph_0_a_led_controller_agent:rf_source_ready
 	wire          avalon_led_periph_0_a_led_controller_agent_rf_source_startofpacket;       // avalon_led_periph_0_a_led_controller_agent:rf_source_startofpacket -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_startofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rf_source_endofpacket;         // avalon_led_periph_0_a_led_controller_agent:rf_source_endofpacket -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:in_endofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_valid;            // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_valid -> avalon_led_periph_0_a_led_controller_agent:rf_sink_valid
-	wire   [85:0] avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_data;             // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_data -> avalon_led_periph_0_a_led_controller_agent:rf_sink_data
+	wire  [112:0] avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_data;             // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_data -> avalon_led_periph_0_a_led_controller_agent:rf_sink_data
 	wire          avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_ready;            // avalon_led_periph_0_a_led_controller_agent:rf_sink_ready -> avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_ready
 	wire          avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_startofpacket;    // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_startofpacket -> avalon_led_periph_0_a_led_controller_agent:rf_sink_startofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rsp_fifo_out_endofpacket;      // avalon_led_periph_0_a_led_controller_agent_rsp_fifo:out_endofpacket -> avalon_led_periph_0_a_led_controller_agent:rf_sink_endofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rdata_fifo_src_valid;          // avalon_led_periph_0_a_led_controller_agent:rdata_fifo_src_valid -> avalon_led_periph_0_a_led_controller_agent_rdata_fifo:in_valid
-	wire    [9:0] avalon_led_periph_0_a_led_controller_agent_rdata_fifo_src_data;           // avalon_led_periph_0_a_led_controller_agent:rdata_fifo_src_data -> avalon_led_periph_0_a_led_controller_agent_rdata_fifo:in_data
+	wire   [33:0] avalon_led_periph_0_a_led_controller_agent_rdata_fifo_src_data;           // avalon_led_periph_0_a_led_controller_agent:rdata_fifo_src_data -> avalon_led_periph_0_a_led_controller_agent_rdata_fifo:in_data
 	wire          avalon_led_periph_0_a_led_controller_agent_rdata_fifo_src_ready;          // avalon_led_periph_0_a_led_controller_agent_rdata_fifo:in_ready -> avalon_led_periph_0_a_led_controller_agent:rdata_fifo_src_ready
 	wire          hps_0_h2f_lw_axi_master_agent_write_cp_valid;                             // hps_0_h2f_lw_axi_master_agent:write_cp_valid -> router:sink_valid
 	wire  [111:0] hps_0_h2f_lw_axi_master_agent_write_cp_data;                              // hps_0_h2f_lw_axi_master_agent:write_cp_data -> router:sink_data
@@ -109,12 +109,24 @@ module av_led_cntl_mm_interconnect_0 (
 	wire          router_001_src_startofpacket;                                             // router_001:src_startofpacket -> cmd_demux_001:sink_startofpacket
 	wire          router_001_src_endofpacket;                                               // router_001:src_endofpacket -> cmd_demux_001:sink_endofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rp_valid;                      // avalon_led_periph_0_a_led_controller_agent:rp_valid -> router_002:sink_valid
-	wire   [84:0] avalon_led_periph_0_a_led_controller_agent_rp_data;                       // avalon_led_periph_0_a_led_controller_agent:rp_data -> router_002:sink_data
+	wire  [111:0] avalon_led_periph_0_a_led_controller_agent_rp_data;                       // avalon_led_periph_0_a_led_controller_agent:rp_data -> router_002:sink_data
 	wire          avalon_led_periph_0_a_led_controller_agent_rp_ready;                      // router_002:sink_ready -> avalon_led_periph_0_a_led_controller_agent:rp_ready
 	wire          avalon_led_periph_0_a_led_controller_agent_rp_startofpacket;              // avalon_led_periph_0_a_led_controller_agent:rp_startofpacket -> router_002:sink_startofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rp_endofpacket;                // avalon_led_periph_0_a_led_controller_agent:rp_endofpacket -> router_002:sink_endofpacket
+	wire          router_002_src_valid;                                                     // router_002:src_valid -> rsp_demux:sink_valid
+	wire  [111:0] router_002_src_data;                                                      // router_002:src_data -> rsp_demux:sink_data
+	wire          router_002_src_ready;                                                     // rsp_demux:sink_ready -> router_002:src_ready
+	wire    [1:0] router_002_src_channel;                                                   // router_002:src_channel -> rsp_demux:sink_channel
+	wire          router_002_src_startofpacket;                                             // router_002:src_startofpacket -> rsp_demux:sink_startofpacket
+	wire          router_002_src_endofpacket;                                               // router_002:src_endofpacket -> rsp_demux:sink_endofpacket
+	wire          cmd_mux_src_valid;                                                        // cmd_mux:src_valid -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_valid
+	wire  [111:0] cmd_mux_src_data;                                                         // cmd_mux:src_data -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_data
+	wire          cmd_mux_src_ready;                                                        // avalon_led_periph_0_a_led_controller_burst_adapter:sink0_ready -> cmd_mux:src_ready
+	wire    [1:0] cmd_mux_src_channel;                                                      // cmd_mux:src_channel -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_channel
+	wire          cmd_mux_src_startofpacket;                                                // cmd_mux:src_startofpacket -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_startofpacket
+	wire          cmd_mux_src_endofpacket;                                                  // cmd_mux:src_endofpacket -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_endofpacket
 	wire          avalon_led_periph_0_a_led_controller_burst_adapter_source0_valid;         // avalon_led_periph_0_a_led_controller_burst_adapter:source0_valid -> avalon_led_periph_0_a_led_controller_agent:cp_valid
-	wire   [84:0] avalon_led_periph_0_a_led_controller_burst_adapter_source0_data;          // avalon_led_periph_0_a_led_controller_burst_adapter:source0_data -> avalon_led_periph_0_a_led_controller_agent:cp_data
+	wire  [111:0] avalon_led_periph_0_a_led_controller_burst_adapter_source0_data;          // avalon_led_periph_0_a_led_controller_burst_adapter:source0_data -> avalon_led_periph_0_a_led_controller_agent:cp_data
 	wire          avalon_led_periph_0_a_led_controller_burst_adapter_source0_ready;         // avalon_led_periph_0_a_led_controller_agent:cp_ready -> avalon_led_periph_0_a_led_controller_burst_adapter:source0_ready
 	wire    [1:0] avalon_led_periph_0_a_led_controller_burst_adapter_source0_channel;       // avalon_led_periph_0_a_led_controller_burst_adapter:source0_channel -> avalon_led_periph_0_a_led_controller_agent:cp_channel
 	wire          avalon_led_periph_0_a_led_controller_burst_adapter_source0_startofpacket; // avalon_led_periph_0_a_led_controller_burst_adapter:source0_startofpacket -> avalon_led_periph_0_a_led_controller_agent:cp_startofpacket
@@ -143,54 +155,30 @@ module av_led_cntl_mm_interconnect_0 (
 	wire    [1:0] rsp_demux_src1_channel;                                                   // rsp_demux:src1_channel -> rsp_mux_001:sink0_channel
 	wire          rsp_demux_src1_startofpacket;                                             // rsp_demux:src1_startofpacket -> rsp_mux_001:sink0_startofpacket
 	wire          rsp_demux_src1_endofpacket;                                               // rsp_demux:src1_endofpacket -> rsp_mux_001:sink0_endofpacket
-	wire          router_002_src_valid;                                                     // router_002:src_valid -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_valid
-	wire   [84:0] router_002_src_data;                                                      // router_002:src_data -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_data
-	wire          router_002_src_ready;                                                     // avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_ready -> router_002:src_ready
-	wire    [1:0] router_002_src_channel;                                                   // router_002:src_channel -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_channel
-	wire          router_002_src_startofpacket;                                             // router_002:src_startofpacket -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_startofpacket
-	wire          router_002_src_endofpacket;                                               // router_002:src_endofpacket -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:in_endofpacket
-	wire          avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_valid;         // avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_valid -> rsp_demux:sink_valid
-	wire  [111:0] avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_data;          // avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_data -> rsp_demux:sink_data
-	wire          avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_ready;         // rsp_demux:sink_ready -> avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_ready
-	wire    [1:0] avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_channel;       // avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_channel -> rsp_demux:sink_channel
-	wire          avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_startofpacket; // avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_startofpacket -> rsp_demux:sink_startofpacket
-	wire          avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_endofpacket;   // avalon_led_periph_0_a_led_controller_rsp_width_adapter:out_endofpacket -> rsp_demux:sink_endofpacket
-	wire          cmd_mux_src_valid;                                                        // cmd_mux:src_valid -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_valid
-	wire  [111:0] cmd_mux_src_data;                                                         // cmd_mux:src_data -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_data
-	wire          cmd_mux_src_ready;                                                        // avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_ready -> cmd_mux:src_ready
-	wire    [1:0] cmd_mux_src_channel;                                                      // cmd_mux:src_channel -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_channel
-	wire          cmd_mux_src_startofpacket;                                                // cmd_mux:src_startofpacket -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_startofpacket
-	wire          cmd_mux_src_endofpacket;                                                  // cmd_mux:src_endofpacket -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:in_endofpacket
-	wire          avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_valid;         // avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_valid -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_valid
-	wire   [84:0] avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_data;          // avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_data -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_data
-	wire          avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_ready;         // avalon_led_periph_0_a_led_controller_burst_adapter:sink0_ready -> avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_ready
-	wire    [1:0] avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_channel;       // avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_channel -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_channel
-	wire          avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_startofpacket; // avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_startofpacket -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_startofpacket
-	wire          avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_endofpacket;   // avalon_led_periph_0_a_led_controller_cmd_width_adapter:out_endofpacket -> avalon_led_periph_0_a_led_controller_burst_adapter:sink0_endofpacket
 	wire          avalon_led_periph_0_a_led_controller_agent_rdata_fifo_out_valid;          // avalon_led_periph_0_a_led_controller_agent_rdata_fifo:out_valid -> avalon_st_adapter:in_0_valid
-	wire    [9:0] avalon_led_periph_0_a_led_controller_agent_rdata_fifo_out_data;           // avalon_led_periph_0_a_led_controller_agent_rdata_fifo:out_data -> avalon_st_adapter:in_0_data
+	wire   [33:0] avalon_led_periph_0_a_led_controller_agent_rdata_fifo_out_data;           // avalon_led_periph_0_a_led_controller_agent_rdata_fifo:out_data -> avalon_st_adapter:in_0_data
 	wire          avalon_led_periph_0_a_led_controller_agent_rdata_fifo_out_ready;          // avalon_st_adapter:in_0_ready -> avalon_led_periph_0_a_led_controller_agent_rdata_fifo:out_ready
 	wire          avalon_st_adapter_out_0_valid;                                            // avalon_st_adapter:out_0_valid -> avalon_led_periph_0_a_led_controller_agent:rdata_fifo_sink_valid
-	wire    [9:0] avalon_st_adapter_out_0_data;                                             // avalon_st_adapter:out_0_data -> avalon_led_periph_0_a_led_controller_agent:rdata_fifo_sink_data
+	wire   [33:0] avalon_st_adapter_out_0_data;                                             // avalon_st_adapter:out_0_data -> avalon_led_periph_0_a_led_controller_agent:rdata_fifo_sink_data
 	wire          avalon_st_adapter_out_0_ready;                                            // avalon_led_periph_0_a_led_controller_agent:rdata_fifo_sink_ready -> avalon_st_adapter:out_0_ready
 	wire    [0:0] avalon_st_adapter_out_0_error;                                            // avalon_st_adapter:out_0_error -> avalon_led_periph_0_a_led_controller_agent:rdata_fifo_sink_error
 
 	altera_merlin_slave_translator #(
 		.AV_ADDRESS_W                   (1),
-		.AV_DATA_W                      (8),
-		.UAV_DATA_W                     (8),
+		.AV_DATA_W                      (32),
+		.UAV_DATA_W                     (32),
 		.AV_BURSTCOUNT_W                (1),
-		.AV_BYTEENABLE_W                (1),
-		.UAV_BYTEENABLE_W               (1),
+		.AV_BYTEENABLE_W                (4),
+		.UAV_BYTEENABLE_W               (4),
 		.UAV_ADDRESS_W                  (21),
-		.UAV_BURSTCOUNT_W               (1),
+		.UAV_BURSTCOUNT_W               (3),
 		.AV_READLATENCY                 (0),
 		.USE_READDATAVALID              (0),
 		.USE_WAITREQUEST                (0),
 		.USE_UAV_CLKEN                  (0),
 		.USE_READRESPONSE               (0),
 		.USE_WRITERESPONSE              (0),
-		.AV_SYMBOLS_PER_WORD            (1),
+		.AV_SYMBOLS_PER_WORD            (4),
 		.AV_ADDRESS_SYMBOLS             (0),
 		.AV_BURSTCOUNT_SYMBOLS          (0),
 		.AV_CONSTANT_BURST_BEHAVIOR     (0),
@@ -219,7 +207,7 @@ module av_led_cntl_mm_interconnect_0 (
 		.av_writedata           (avalon_led_periph_0_a_led_controller_writedata),              //                         .writedata
 		.av_address             (),                                                            //              (terminated)
 		.av_read                (),                                                            //              (terminated)
-		.av_readdata            (8'b10101101),                                                 //              (terminated)
+		.av_readdata            (32'b11011110101011011101111010101101),                        //              (terminated)
 		.av_begintransfer       (),                                                            //              (terminated)
 		.av_beginbursttransfer  (),                                                            //              (terminated)
 		.av_burstcount          (),                                                            //              (terminated)
@@ -368,38 +356,38 @@ module av_led_cntl_mm_interconnect_0 (
 	);
 
 	altera_merlin_slave_agent #(
-		.PKT_ORI_BURST_SIZE_H      (84),
-		.PKT_ORI_BURST_SIZE_L      (82),
-		.PKT_RESPONSE_STATUS_H     (81),
-		.PKT_RESPONSE_STATUS_L     (80),
-		.PKT_BURST_SIZE_H          (52),
-		.PKT_BURST_SIZE_L          (50),
-		.PKT_TRANS_LOCK            (34),
-		.PKT_BEGIN_BURST           (57),
-		.PKT_PROTECTION_H          (75),
-		.PKT_PROTECTION_L          (73),
-		.PKT_BURSTWRAP_H           (49),
-		.PKT_BURSTWRAP_L           (43),
-		.PKT_BYTE_CNT_H            (42),
-		.PKT_BYTE_CNT_L            (36),
-		.PKT_ADDR_H                (29),
-		.PKT_ADDR_L                (9),
-		.PKT_TRANS_COMPRESSED_READ (30),
-		.PKT_TRANS_POSTED          (31),
-		.PKT_TRANS_WRITE           (32),
-		.PKT_TRANS_READ            (33),
-		.PKT_DATA_H                (7),
+		.PKT_ORI_BURST_SIZE_H      (111),
+		.PKT_ORI_BURST_SIZE_L      (109),
+		.PKT_RESPONSE_STATUS_H     (108),
+		.PKT_RESPONSE_STATUS_L     (107),
+		.PKT_BURST_SIZE_H          (79),
+		.PKT_BURST_SIZE_L          (77),
+		.PKT_TRANS_LOCK            (61),
+		.PKT_BEGIN_BURST           (84),
+		.PKT_PROTECTION_H          (102),
+		.PKT_PROTECTION_L          (100),
+		.PKT_BURSTWRAP_H           (76),
+		.PKT_BURSTWRAP_L           (70),
+		.PKT_BYTE_CNT_H            (69),
+		.PKT_BYTE_CNT_L            (63),
+		.PKT_ADDR_H                (56),
+		.PKT_ADDR_L                (36),
+		.PKT_TRANS_COMPRESSED_READ (57),
+		.PKT_TRANS_POSTED          (58),
+		.PKT_TRANS_WRITE           (59),
+		.PKT_TRANS_READ            (60),
+		.PKT_DATA_H                (31),
 		.PKT_DATA_L                (0),
-		.PKT_BYTEEN_H              (8),
-		.PKT_BYTEEN_L              (8),
-		.PKT_SRC_ID_H              (59),
-		.PKT_SRC_ID_L              (59),
-		.PKT_DEST_ID_H             (60),
-		.PKT_DEST_ID_L             (60),
+		.PKT_BYTEEN_H              (35),
+		.PKT_BYTEEN_L              (32),
+		.PKT_SRC_ID_H              (86),
+		.PKT_SRC_ID_L              (86),
+		.PKT_DEST_ID_H             (87),
+		.PKT_DEST_ID_L             (87),
 		.PKT_SYMBOL_W              (8),
 		.ST_CHANNEL_W              (2),
-		.ST_DATA_W                 (85),
-		.AVS_BURSTCOUNT_W          (1),
+		.ST_DATA_W                 (112),
+		.AVS_BURSTCOUNT_W          (3),
 		.SUPPRESS_0_BYTEEN_CMD     (1),
 		.PREVENT_FIFO_OVERFLOW     (1),
 		.USE_READRESPONSE          (0),
@@ -453,7 +441,7 @@ module av_led_cntl_mm_interconnect_0 (
 
 	altera_avalon_sc_fifo #(
 		.SYMBOLS_PER_BEAT    (1),
-		.BITS_PER_SYMBOL     (86),
+		.BITS_PER_SYMBOL     (113),
 		.FIFO_DEPTH          (2),
 		.CHANNEL_WIDTH       (0),
 		.ERROR_WIDTH         (0),
@@ -494,7 +482,7 @@ module av_led_cntl_mm_interconnect_0 (
 
 	altera_avalon_sc_fifo #(
 		.SYMBOLS_PER_BEAT    (1),
-		.BITS_PER_SYMBOL     (10),
+		.BITS_PER_SYMBOL     (34),
 		.FIFO_DEPTH          (2),
 		.CHANNEL_WIDTH       (0),
 		.ERROR_WIDTH         (0),
@@ -582,30 +570,30 @@ module av_led_cntl_mm_interconnect_0 (
 	);
 
 	altera_merlin_burst_adapter #(
-		.PKT_ADDR_H                (29),
-		.PKT_ADDR_L                (9),
-		.PKT_BEGIN_BURST           (57),
-		.PKT_BYTE_CNT_H            (42),
-		.PKT_BYTE_CNT_L            (36),
-		.PKT_BYTEEN_H              (8),
-		.PKT_BYTEEN_L              (8),
-		.PKT_BURST_SIZE_H          (52),
-		.PKT_BURST_SIZE_L          (50),
-		.PKT_BURST_TYPE_H          (54),
-		.PKT_BURST_TYPE_L          (53),
-		.PKT_BURSTWRAP_H           (49),
-		.PKT_BURSTWRAP_L           (43),
-		.PKT_TRANS_COMPRESSED_READ (30),
-		.PKT_TRANS_WRITE           (32),
-		.PKT_TRANS_READ            (33),
+		.PKT_ADDR_H                (56),
+		.PKT_ADDR_L                (36),
+		.PKT_BEGIN_BURST           (84),
+		.PKT_BYTE_CNT_H            (69),
+		.PKT_BYTE_CNT_L            (63),
+		.PKT_BYTEEN_H              (35),
+		.PKT_BYTEEN_L              (32),
+		.PKT_BURST_SIZE_H          (79),
+		.PKT_BURST_SIZE_L          (77),
+		.PKT_BURST_TYPE_H          (81),
+		.PKT_BURST_TYPE_L          (80),
+		.PKT_BURSTWRAP_H           (76),
+		.PKT_BURSTWRAP_L           (70),
+		.PKT_TRANS_COMPRESSED_READ (57),
+		.PKT_TRANS_WRITE           (59),
+		.PKT_TRANS_READ            (60),
 		.OUT_NARROW_SIZE           (0),
 		.IN_NARROW_SIZE            (1),
 		.OUT_FIXED                 (0),
 		.OUT_COMPLETE_WRAP         (0),
-		.ST_DATA_W                 (85),
+		.ST_DATA_W                 (112),
 		.ST_CHANNEL_W              (2),
-		.OUT_BYTE_CNT_H            (36),
-		.OUT_BURSTWRAP_H           (49),
+		.OUT_BYTE_CNT_H            (65),
+		.OUT_BURSTWRAP_H           (76),
 		.COMPRESSED_READ_SUPPORT   (1),
 		.BYTEENABLE_SYNTHESIS      (1),
 		.PIPE_INPUTS               (0),
@@ -617,12 +605,12 @@ module av_led_cntl_mm_interconnect_0 (
 	) avalon_led_periph_0_a_led_controller_burst_adapter (
 		.clk                   (clk_0_clk_clk),                                                            //       cr0.clk
 		.reset                 (avalon_led_periph_0_reset_reset_bridge_in_reset_reset),                    // cr0_reset.reset
-		.sink0_valid           (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_valid),         //     sink0.valid
-		.sink0_data            (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_data),          //          .data
-		.sink0_channel         (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_channel),       //          .channel
-		.sink0_startofpacket   (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_startofpacket), //          .startofpacket
-		.sink0_endofpacket     (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_endofpacket),   //          .endofpacket
-		.sink0_ready           (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_ready),         //          .ready
+		.sink0_valid           (cmd_mux_src_valid),                                                        //     sink0.valid
+		.sink0_data            (cmd_mux_src_data),                                                         //          .data
+		.sink0_channel         (cmd_mux_src_channel),                                                      //          .channel
+		.sink0_startofpacket   (cmd_mux_src_startofpacket),                                                //          .startofpacket
+		.sink0_endofpacket     (cmd_mux_src_endofpacket),                                                  //          .endofpacket
+		.sink0_ready           (cmd_mux_src_ready),                                                        //          .ready
 		.source0_valid         (avalon_led_periph_0_a_led_controller_burst_adapter_source0_valid),         //   source0.valid
 		.source0_data          (avalon_led_periph_0_a_led_controller_burst_adapter_source0_data),          //          .data
 		.source0_channel       (avalon_led_periph_0_a_led_controller_burst_adapter_source0_channel),       //          .channel
@@ -689,26 +677,26 @@ module av_led_cntl_mm_interconnect_0 (
 	);
 
 	av_led_cntl_mm_interconnect_0_rsp_demux rsp_demux (
-		.clk                (clk_0_clk_clk),                                                            //       clk.clk
-		.reset              (avalon_led_periph_0_reset_reset_bridge_in_reset_reset),                    // clk_reset.reset
-		.sink_ready         (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_ready),         //      sink.ready
-		.sink_channel       (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_channel),       //          .channel
-		.sink_data          (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_data),          //          .data
-		.sink_startofpacket (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_startofpacket), //          .startofpacket
-		.sink_endofpacket   (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_endofpacket),   //          .endofpacket
-		.sink_valid         (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_valid),         //          .valid
-		.src0_ready         (rsp_demux_src0_ready),                                                     //      src0.ready
-		.src0_valid         (rsp_demux_src0_valid),                                                     //          .valid
-		.src0_data          (rsp_demux_src0_data),                                                      //          .data
-		.src0_channel       (rsp_demux_src0_channel),                                                   //          .channel
-		.src0_startofpacket (rsp_demux_src0_startofpacket),                                             //          .startofpacket
-		.src0_endofpacket   (rsp_demux_src0_endofpacket),                                               //          .endofpacket
-		.src1_ready         (rsp_demux_src1_ready),                                                     //      src1.ready
-		.src1_valid         (rsp_demux_src1_valid),                                                     //          .valid
-		.src1_data          (rsp_demux_src1_data),                                                      //          .data
-		.src1_channel       (rsp_demux_src1_channel),                                                   //          .channel
-		.src1_startofpacket (rsp_demux_src1_startofpacket),                                             //          .startofpacket
-		.src1_endofpacket   (rsp_demux_src1_endofpacket)                                                //          .endofpacket
+		.clk                (clk_0_clk_clk),                                         //       clk.clk
+		.reset              (avalon_led_periph_0_reset_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_002_src_ready),                                  //      sink.ready
+		.sink_channel       (router_002_src_channel),                                //          .channel
+		.sink_data          (router_002_src_data),                                   //          .data
+		.sink_startofpacket (router_002_src_startofpacket),                          //          .startofpacket
+		.sink_endofpacket   (router_002_src_endofpacket),                            //          .endofpacket
+		.sink_valid         (router_002_src_valid),                                  //          .valid
+		.src0_ready         (rsp_demux_src0_ready),                                  //      src0.ready
+		.src0_valid         (rsp_demux_src0_valid),                                  //          .valid
+		.src0_data          (rsp_demux_src0_data),                                   //          .data
+		.src0_channel       (rsp_demux_src0_channel),                                //          .channel
+		.src0_startofpacket (rsp_demux_src0_startofpacket),                          //          .startofpacket
+		.src0_endofpacket   (rsp_demux_src0_endofpacket),                            //          .endofpacket
+		.src1_ready         (rsp_demux_src1_ready),                                  //      src1.ready
+		.src1_valid         (rsp_demux_src1_valid),                                  //          .valid
+		.src1_data          (rsp_demux_src1_data),                                   //          .data
+		.src1_channel       (rsp_demux_src1_channel),                                //          .channel
+		.src1_startofpacket (rsp_demux_src1_startofpacket),                          //          .startofpacket
+		.src1_endofpacket   (rsp_demux_src1_endofpacket)                             //          .endofpacket
 	);
 
 	av_led_cntl_mm_interconnect_0_rsp_mux rsp_mux (
@@ -745,149 +733,17 @@ module av_led_cntl_mm_interconnect_0 (
 		.sink0_endofpacket   (rsp_demux_src1_endofpacket)                                           //          .endofpacket
 	);
 
-	altera_merlin_width_adapter #(
-		.IN_PKT_ADDR_H                 (29),
-		.IN_PKT_ADDR_L                 (9),
-		.IN_PKT_DATA_H                 (7),
-		.IN_PKT_DATA_L                 (0),
-		.IN_PKT_BYTEEN_H               (8),
-		.IN_PKT_BYTEEN_L               (8),
-		.IN_PKT_BYTE_CNT_H             (42),
-		.IN_PKT_BYTE_CNT_L             (36),
-		.IN_PKT_TRANS_COMPRESSED_READ  (30),
-		.IN_PKT_TRANS_WRITE            (32),
-		.IN_PKT_BURSTWRAP_H            (49),
-		.IN_PKT_BURSTWRAP_L            (43),
-		.IN_PKT_BURST_SIZE_H           (52),
-		.IN_PKT_BURST_SIZE_L           (50),
-		.IN_PKT_RESPONSE_STATUS_H      (81),
-		.IN_PKT_RESPONSE_STATUS_L      (80),
-		.IN_PKT_TRANS_EXCLUSIVE        (35),
-		.IN_PKT_BURST_TYPE_H           (54),
-		.IN_PKT_BURST_TYPE_L           (53),
-		.IN_PKT_ORI_BURST_SIZE_L       (82),
-		.IN_PKT_ORI_BURST_SIZE_H       (84),
-		.IN_ST_DATA_W                  (85),
-		.OUT_PKT_ADDR_H                (56),
-		.OUT_PKT_ADDR_L                (36),
-		.OUT_PKT_DATA_H                (31),
-		.OUT_PKT_DATA_L                (0),
-		.OUT_PKT_BYTEEN_H              (35),
-		.OUT_PKT_BYTEEN_L              (32),
-		.OUT_PKT_BYTE_CNT_H            (69),
-		.OUT_PKT_BYTE_CNT_L            (63),
-		.OUT_PKT_TRANS_COMPRESSED_READ (57),
-		.OUT_PKT_BURST_SIZE_H          (79),
-		.OUT_PKT_BURST_SIZE_L          (77),
-		.OUT_PKT_RESPONSE_STATUS_H     (108),
-		.OUT_PKT_RESPONSE_STATUS_L     (107),
-		.OUT_PKT_TRANS_EXCLUSIVE       (62),
-		.OUT_PKT_BURST_TYPE_H          (81),
-		.OUT_PKT_BURST_TYPE_L          (80),
-		.OUT_PKT_ORI_BURST_SIZE_L      (109),
-		.OUT_PKT_ORI_BURST_SIZE_H      (111),
-		.OUT_ST_DATA_W                 (112),
-		.ST_CHANNEL_W                  (2),
-		.OPTIMIZE_FOR_RSP              (0),
-		.RESPONSE_PATH                 (1),
-		.CONSTANT_BURST_SIZE           (0),
-		.PACKING                       (1),
-		.ENABLE_ADDRESS_ALIGNMENT      (1)
-	) avalon_led_periph_0_a_led_controller_rsp_width_adapter (
-		.clk                  (clk_0_clk_clk),                                                            //       clk.clk
-		.reset                (avalon_led_periph_0_reset_reset_bridge_in_reset_reset),                    // clk_reset.reset
-		.in_valid             (router_002_src_valid),                                                     //      sink.valid
-		.in_channel           (router_002_src_channel),                                                   //          .channel
-		.in_startofpacket     (router_002_src_startofpacket),                                             //          .startofpacket
-		.in_endofpacket       (router_002_src_endofpacket),                                               //          .endofpacket
-		.in_ready             (router_002_src_ready),                                                     //          .ready
-		.in_data              (router_002_src_data),                                                      //          .data
-		.out_endofpacket      (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_endofpacket),   //       src.endofpacket
-		.out_data             (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_data),          //          .data
-		.out_channel          (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_channel),       //          .channel
-		.out_valid            (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_valid),         //          .valid
-		.out_ready            (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_ready),         //          .ready
-		.out_startofpacket    (avalon_led_periph_0_a_led_controller_rsp_width_adapter_src_startofpacket), //          .startofpacket
-		.in_command_size_data (3'b000)                                                                    // (terminated)
-	);
-
-	altera_merlin_width_adapter #(
-		.IN_PKT_ADDR_H                 (56),
-		.IN_PKT_ADDR_L                 (36),
-		.IN_PKT_DATA_H                 (31),
-		.IN_PKT_DATA_L                 (0),
-		.IN_PKT_BYTEEN_H               (35),
-		.IN_PKT_BYTEEN_L               (32),
-		.IN_PKT_BYTE_CNT_H             (69),
-		.IN_PKT_BYTE_CNT_L             (63),
-		.IN_PKT_TRANS_COMPRESSED_READ  (57),
-		.IN_PKT_TRANS_WRITE            (59),
-		.IN_PKT_BURSTWRAP_H            (76),
-		.IN_PKT_BURSTWRAP_L            (70),
-		.IN_PKT_BURST_SIZE_H           (79),
-		.IN_PKT_BURST_SIZE_L           (77),
-		.IN_PKT_RESPONSE_STATUS_H      (108),
-		.IN_PKT_RESPONSE_STATUS_L      (107),
-		.IN_PKT_TRANS_EXCLUSIVE        (62),
-		.IN_PKT_BURST_TYPE_H           (81),
-		.IN_PKT_BURST_TYPE_L           (80),
-		.IN_PKT_ORI_BURST_SIZE_L       (109),
-		.IN_PKT_ORI_BURST_SIZE_H       (111),
-		.IN_ST_DATA_W                  (112),
-		.OUT_PKT_ADDR_H                (29),
-		.OUT_PKT_ADDR_L                (9),
-		.OUT_PKT_DATA_H                (7),
-		.OUT_PKT_DATA_L                (0),
-		.OUT_PKT_BYTEEN_H              (8),
-		.OUT_PKT_BYTEEN_L              (8),
-		.OUT_PKT_BYTE_CNT_H            (42),
-		.OUT_PKT_BYTE_CNT_L            (36),
-		.OUT_PKT_TRANS_COMPRESSED_READ (30),
-		.OUT_PKT_BURST_SIZE_H          (52),
-		.OUT_PKT_BURST_SIZE_L          (50),
-		.OUT_PKT_RESPONSE_STATUS_H     (81),
-		.OUT_PKT_RESPONSE_STATUS_L     (80),
-		.OUT_PKT_TRANS_EXCLUSIVE       (35),
-		.OUT_PKT_BURST_TYPE_H          (54),
-		.OUT_PKT_BURST_TYPE_L          (53),
-		.OUT_PKT_ORI_BURST_SIZE_L      (82),
-		.OUT_PKT_ORI_BURST_SIZE_H      (84),
-		.OUT_ST_DATA_W                 (85),
-		.ST_CHANNEL_W                  (2),
-		.OPTIMIZE_FOR_RSP              (0),
-		.RESPONSE_PATH                 (0),
-		.CONSTANT_BURST_SIZE           (0),
-		.PACKING                       (0),
-		.ENABLE_ADDRESS_ALIGNMENT      (1)
-	) avalon_led_periph_0_a_led_controller_cmd_width_adapter (
-		.clk                  (clk_0_clk_clk),                                                            //       clk.clk
-		.reset                (avalon_led_periph_0_reset_reset_bridge_in_reset_reset),                    // clk_reset.reset
-		.in_valid             (cmd_mux_src_valid),                                                        //      sink.valid
-		.in_channel           (cmd_mux_src_channel),                                                      //          .channel
-		.in_startofpacket     (cmd_mux_src_startofpacket),                                                //          .startofpacket
-		.in_endofpacket       (cmd_mux_src_endofpacket),                                                  //          .endofpacket
-		.in_ready             (cmd_mux_src_ready),                                                        //          .ready
-		.in_data              (cmd_mux_src_data),                                                         //          .data
-		.out_endofpacket      (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_endofpacket),   //       src.endofpacket
-		.out_data             (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_data),          //          .data
-		.out_channel          (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_channel),       //          .channel
-		.out_valid            (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_valid),         //          .valid
-		.out_ready            (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_ready),         //          .ready
-		.out_startofpacket    (avalon_led_periph_0_a_led_controller_cmd_width_adapter_src_startofpacket), //          .startofpacket
-		.in_command_size_data (3'b000)                                                                    // (terminated)
-	);
-
 	av_led_cntl_mm_interconnect_0_avalon_st_adapter #(
-		.inBitsPerSymbol (10),
+		.inBitsPerSymbol (34),
 		.inUsePackets    (0),
-		.inDataWidth     (10),
+		.inDataWidth     (34),
 		.inChannelWidth  (0),
 		.inErrorWidth    (0),
 		.inUseEmptyPort  (0),
 		.inUseValid      (1),
 		.inUseReady      (1),
 		.inReadyLatency  (0),
-		.outDataWidth    (10),
+		.outDataWidth    (34),
 		.outChannelWidth (0),
 		.outErrorWidth   (1),
 		.outUseEmptyPort (0),

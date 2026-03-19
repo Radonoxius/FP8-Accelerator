@@ -1,5 +1,5 @@
 Assembler report for led_controller
-Tue Mar 10 16:34:56 2026
+Thu Mar 19 16:32:58 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -38,7 +38,7 @@ on the Quartus Prime software download page.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Tue Mar 10 16:34:56 2026 ;
+; Assembler Status      ; Successful - Thu Mar 19 16:32:58 2026 ;
 ; Revision Name         ; led_controller                        ;
 ; Top-level Entity Name ; led_controller                        ;
 ; Family                ; Cyclone V                             ;
@@ -67,8 +67,8 @@ on the Quartus Prime software download page.
 +----------------+-----------------------------+
 ; Option         ; Setting                     ;
 +----------------+-----------------------------+
-; JTAG usercode  ; 0x00B6D9A9                  ;
-; Checksum       ; 0x00B6D9A9                  ;
+; JTAG usercode  ; 0x00B3BC8E                  ;
+; Checksum       ; 0x00B3BC8E                  ;
 +----------------+-----------------------------+
 
 
@@ -78,17 +78,15 @@ on the Quartus Prime software download page.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Tue Mar 10 16:34:48 2026
+    Info: Processing started: Thu Mar 19 16:32:52 2026
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off led_controller -c led_controller
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (115030): Assembler is generating device programming files
-Warning (11713): The configuration of the Hard Processor Subsystem (HPS) within this design has changed.
-The Preloader software that initializes the HPS requires an update.
-Using hps_isw_handoff/av_led_cntl_hps_0/, run the Preloader Support Package Generator to update your Preloader software
-Info: Quartus Prime Assembler was successful. 0 errors, 2 warnings
-    Info: Peak virtual memory: 558 megabytes
-    Info: Processing ended: Tue Mar 10 16:34:56 2026
-    Info: Elapsed time: 00:00:08
+Info (11878): Hard Processor Subsystem configuration has not changed and a Preloader software update is not required
+Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
+    Info: Peak virtual memory: 551 megabytes
+    Info: Processing ended: Thu Mar 19 16:32:58 2026
+    Info: Elapsed time: 00:00:06
     Info: Total CPU time (on all processors): 00:00:07
 
 

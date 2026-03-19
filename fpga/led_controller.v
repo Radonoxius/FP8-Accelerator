@@ -82,7 +82,7 @@ module led_controller(
 
     av_led_cntl u0 (
         .clk_clk            (CLOCK_50),            //    clk.clk
-        .led_new_signal     (LEDR0),     //    led.new_signal
+        .led_out_led_line     (LEDR0),     //    led_out.led_line
         .memory_mem_a       (HPS_DDR3_ADDR),       // memory.mem_a
         .memory_mem_ba      (HPS_DDR3_BA),      //       .mem_ba
         .memory_mem_ck      (HPS_DDR3_CK_P),      //       .mem_ck

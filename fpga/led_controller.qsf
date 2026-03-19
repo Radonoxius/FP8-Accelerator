@@ -168,11 +168,6 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name QIP_FILE av_led_cntl/synthesis/av_led_cntl.qip
-set_global_assignment -name SOURCE_FILE ip/presets/DE1_SOC_DDR3_SETTING.qprs
-set_global_assignment -name VERILOG_FILE led_controller.v
-set_global_assignment -name VERILOG_FILE avalonLedController.v
-set_global_assignment -name SDC_FILE led_controller.SDC
 set_location_assignment PIN_V16 -to LEDR0
 set_instance_assignment -name INPUT_TERMINATION "PARALLEL 50 OHM WITH CALIBRATION" -to HPS_DDR3_DQ[0] -tag __hps_sdram_p0
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION" -to HPS_DDR3_DQ[0] -tag __hps_sdram_p0
@@ -378,4 +373,10 @@ set_global_assignment -name USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN ON
 set_global_assignment -name UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE ON
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
 set_global_assignment -name ECO_REGENERATE_REPORT ON
+set_global_assignment -name QIP_FILE av_led_cntl/synthesis/av_led_cntl.qip
+set_global_assignment -name SOURCE_FILE ip/presets/DE1_SOC_DDR3_SETTING.qprs
+set_global_assignment -name VERILOG_FILE led_controller.v
+set_global_assignment -name VERILOG_FILE avalonLedController.v
+set_global_assignment -name SDC_FILE led_controller.SDC
+set_global_assignment -name BOARD "DE1-SoC Board"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

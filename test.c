@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
 #define LW_BRIDGE_BASE    0xFF200000
-#define LW_BRIDGE_SPAN    0x00200000
+#define LW_BRIDGE_SPAN    0x00002000
 
 #define LED_OFFSET        0x00001000   // 0xFF201000 - 0xFF200000
 
 int main() {
     int fd;
     void *virtual_base;
-    volatile unsigned int *led;
+    volatile uint32_t *led;
 
     // Open /dev/mem
     fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -33,7 +34,7 @@ int main() {
     }
 
     // Point to LED register
-    led = (volatile unsigned int *)(virtual_base + LED_OFFSET);
+    led = (volatile uint32_t *)(virtual_base + LED_OFFSET);
 
     printf("LED Blinker Started. Press Ctrl+C to stop.\n");
 
