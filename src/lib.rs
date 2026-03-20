@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{f32, fmt::Debug};
 
 use crate::state::State;
 
@@ -51,24 +51,35 @@ impl Fp8 {
     }
 
     ///Get the sign bit of the FP8 number.
-    pub fn get_sign_bit(&self) -> u8 {
+    pub fn sign_bit(&self) -> u8 {
         self.byte >> 7
     }
 
+    ///Returns true if the number is positive.
+    ///
+    ///Valid for all states, including NaN and zero.
+    pub fn is_positive(&self) -> bool {
+        return if self.sign_bit() == 0 {
+            true
+        } else {
+            false
+        }
+    }
+
     ///Get the exponent bits of the FP8 number.
-    pub fn get_exponent_bits(&self) -> u8 {
+    pub fn exponent_bits(&self) -> u8 {
         (self.byte & 0b0111_1000) >> 3
     }
 
     ///Get the mantissa bits of the FP8 number.
-    pub fn get_mantissa_bits(&self) -> u8 {
+    pub fn mantissa_bits(&self) -> u8 {
         self.byte & 0b0000_0111
     }
 
-    ///Get the exponent value (with added bias) of the FP8 number.
+    ///Get the exponent value (with bias) of the FP8 number.
     ///
     ///Returns `None` if the number is zero or NaN.
-    pub fn get_exponent_value(&self) -> Option<i8> {
+    pub fn exponent_value(&self) -> Option<i8> {
         match State::get(self) {
             State::Zero => {
                 None
@@ -83,18 +94,18 @@ impl Fp8 {
             },
 
             State::Normal => {
-                Some(self.get_exponent_bits() as i8 - 7)
+                Some(self.exponent_bits() as i8 - 7)
             }
         }
     }
 
-    ///Get the mantissa value of the FP8 number.
+    ///Get the (signed) mantissa value of the FP8 number.
     ///
     ///For Normals, the result includes
     ///the implicit bit, 1 at bit index 3.
     /// 
     ///Returns `None` if the number is NaN.
-    pub fn get_mantissa_value(&self) -> Option<u8> {
+    pub fn mantissa_value(&self) -> Option<i8> {
         match State::get(self) {
             State::Zero => {
                 Some(0)
@@ -105,22 +116,34 @@ impl Fp8 {
             },
 
             State::Subnormal => {
-                Some(self.get_mantissa_bits())
+                if self.is_positive() {
+                    Some(self.mantissa_bits() as i8)
+                } else {
+                    Some(-(self.mantissa_bits() as i8))
+                }
             },
 
             State::Normal => {
-                Some(8 | self.get_mantissa_bits())
+                if self.is_positive() {
+                    Some((8 | self.mantissa_bits()) as i8)
+                } else {
+                    Some(-((8 | self.mantissa_bits()) as i8))
+                }
             }
         }
     }
 
-    ///Get the mantissa value of the FP8 number as a float.
+    ///Get the (signed) mantissa value of the FP8 number as a float.
     ///
     ///Returns `None` if the number is NaN.
-    pub fn get_mantissa_value_as_float(&self) -> Option<f32> {
+    pub fn mantissa_value_as_float(&self) -> Option<f32> {
         match State::get(self) {
             State::Zero => {
-                Some(0.0)
+                if self.is_positive() {
+                    Some(0.0)
+                } else {
+                    Some(-0.0)
+                }
             },
 
             State::NaN => {
@@ -128,74 +151,125 @@ impl Fp8 {
             },
 
             State::Subnormal => {
-                Some(
-                    0.5 * ((self.get_mantissa_bits() & 4) >> 2) as f32 +
-                    0.25 * ((self.get_mantissa_bits() & 2) >> 1) as f32 +
-                    0.125 * (self.get_mantissa_bits() & 1) as f32
-                )
+                if self.is_positive() {
+                    Some(
+                        0.5 * ((self.mantissa_bits() & 4) >> 2) as f32 +
+                        0.25 * ((self.mantissa_bits() & 2) >> 1) as f32 +
+                        0.125 * (self.mantissa_bits() & 1) as f32
+                    )
+                } else {
+                    Some(
+                        -(
+                            0.5 * ((self.mantissa_bits() & 4) >> 2) as f32 +
+                            0.25 * ((self.mantissa_bits() & 2) >> 1) as f32 +
+                            0.125 * (self.mantissa_bits() & 1) as f32
+                        )
+                    )
+                }
             },
 
             State::Normal => {
-                Some(
-                    1.0 +
-                    0.5 * ((self.get_mantissa_bits() & 4) >> 2) as f32 +
-                    0.25 * ((self.get_mantissa_bits() & 2) >> 1) as f32 +
-                    0.125 * (self.get_mantissa_bits() & 1) as f32
-                )
+                if self.is_positive() {
+                    Some(
+                        1.0 +
+                        0.5 * ((self.mantissa_bits() & 4) >> 2) as f32 +
+                        0.25 * ((self.mantissa_bits() & 2) >> 1) as f32 +
+                        0.125 * (self.mantissa_bits() & 1) as f32
+                    )
+                } else {
+                    Some(
+                        -(
+                            1.0 +
+                            0.5 * ((self.mantissa_bits() & 4) >> 2) as f32 +
+                            0.25 * ((self.mantissa_bits() & 2) >> 1) as f32 +
+                            0.125 * (self.mantissa_bits() & 1) as f32
+                        )
+                    )
+                }
             }
+        }
+    }
+
+    ///Gets the FP8 number as (exponent, signed mantissa)
+    ///
+    ///SAFETY: The number MUST NOT BE 0 or NaN
+    pub(crate) unsafe fn as_components(&self) -> (i8, i8) {
+        match State::get(self) {
+            State::Normal => (
+                self.exponent_value().unwrap(),
+                self.mantissa_value().unwrap()
+            ),
+
+            State::Subnormal => (-6, self.mantissa_value().unwrap()),
+
+            _ => unreachable!(),
         }
     }
 }
 
 impl Debug for Fp8 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mantissa = self.get_mantissa_value_as_float();
-        let exponent = self.get_exponent_value();
+        let mantissa = self.mantissa_value_as_float();
+        let exponent = self.exponent_value();
 
-        return {
-            if let None = mantissa && None == exponent {
-                if self.get_sign_bit() == 1 {
-                    write!(f, "-NaN")
-                }
-                else {
-                    write!(f, "NaN")
-                }
-            }
-            else if let Some(_) = mantissa && let None = exponent {
-                if self.get_sign_bit() == 1 {
-                    write!(f, "-0.0")
-                }
-                else {
-                    write!(f, "0.0")
-                }
-            }
-            else if let None = mantissa && let Some(_) = exponent {
-                unreachable!()
+        return if let None = mantissa && None == exponent {
+            if self.is_positive() {
+                write!(f, "NaN")
             }
             else {
-                if self.get_sign_bit() == 1 {
-                    write!(
-                        f,
-                        "-{} x 2 ^ {}",
-                        self.get_mantissa_value_as_float().unwrap(),
-                        self.get_exponent_value().unwrap()
-                    )
-                }
-                else {
-                    write!(
-                        f,
-                        "{} x 2 ^ {}",
-                        self.get_mantissa_value_as_float().unwrap(),
-                        self.get_exponent_value().unwrap()
-                    )
-                }
+                write!(f, "-NaN")
             }
+        } else if let Some(_) = mantissa && let None = exponent {
+            if self.is_positive() {
+                write!(f, "0.0")
+            }
+            else {
+                write!(f, "-0.0")
+            }
+        } else if let None = mantissa && let Some(_) = exponent {
+            unreachable!()
+        } else {
+            write!(
+                f,
+                "{} x 2 ^ {}",
+                self.mantissa_value_as_float().unwrap(),
+                self.exponent_value().unwrap()
+            )
         };
     }
 }
 
 impl From<u8> for Fp8 {
+    ///Converts a raw byte into an FP8 variable.
     fn from(value: u8) -> Self {
         Self { byte: value }
+    }
+}
+
+impl Into<f32> for Fp8 {
+    ///Converts the FP8 variable into a regular float.
+    ///
+    ///NOTE: f32 only supports +NaN
+    fn into(self) -> f32 {
+        let exp = self.exponent_value();
+        let mantissa = self.mantissa_value_as_float();
+
+        return if exp == None && mantissa == None {
+            f32::NAN
+        } else if exp == None && mantissa != None {
+            if self.is_positive() {
+                0.0
+            }
+            else {
+                -0.0
+            }
+        } else if exp != None && mantissa == None {
+            unreachable!()
+        } else {
+            let exp = exp.unwrap();
+            let mantissa = mantissa.unwrap();
+
+            mantissa * f32::powi(2.0, exp as i32)
+        };
     }
 }

@@ -10,35 +10,32 @@ pub enum State {
 
     Subnormal,
 
-    Normal,
+    Normal
 }
 
 impl State {
     fn is_zero(n: &Fp8) -> bool {
         if n.byte << 1 == 0 {
             true
-        }
-        else {
+        } else {
             false
         }
     }
 
     fn is_subnormal(n: &Fp8) -> bool {
-        if n.get_exponent_bits() == 0 &&
-            n.get_mantissa_bits() != 0 {
+        if n.exponent_bits() == 0 &&
+            n.mantissa_bits() != 0 {
             true
-        }
-        else {
+        } else {
             false
         }
     }
 
     fn is_nan(n: &Fp8) -> bool {
-        if n.get_exponent_bits() == 15 &&
-            n.get_mantissa_bits() == 7 {
+        if n.exponent_bits() == 15 &&
+            n.mantissa_bits() == 7 {
             true
-        }
-        else {
+        } else {
             false
         }
     }
@@ -47,14 +44,11 @@ impl State {
     pub fn get(n: &Fp8) -> State {
         if Self::is_zero(n) {
             State::Zero
-        }
-        else if Self::is_nan(n) {
+        } else if Self::is_nan(n) {
             State::NaN
-        }
-        else if Self::is_subnormal(n) {
+        } else if Self::is_subnormal(n) {
             State::Subnormal
-        }
-        else {
+        } else {
             State::Normal
         }
     }
