@@ -99,13 +99,13 @@ impl Fp8 {
         }
     }
 
-    ///Get the (signed) mantissa value of the FP8 number.
+    ///Get the (absolute) mantissa value of the FP8 number.
     ///
     ///For Normals, the result includes
     ///the implicit bit, 1 at bit index 3.
     /// 
     ///Returns `None` if the number is NaN.
-    pub fn mantissa_value(&self) -> Option<i8> {
+    pub fn mantissa_value(&self) -> Option<u8> {
         match State::get(self) {
             State::Zero => {
                 Some(0)
@@ -116,19 +116,11 @@ impl Fp8 {
             },
 
             State::Subnormal => {
-                if self.is_positive() {
-                    Some(self.mantissa_bits() as i8)
-                } else {
-                    Some(-(self.mantissa_bits() as i8))
-                }
+                Some(self.mantissa_bits())
             },
 
             State::Normal => {
-                if self.is_positive() {
-                    Some((8 | self.mantissa_bits()) as i8)
-                } else {
-                    Some(-((8 | self.mantissa_bits()) as i8))
-                }
+                Some(8 | self.mantissa_bits())
             }
         }
     }
@@ -193,7 +185,7 @@ impl Fp8 {
     ///Gets the FP8 number as (exponent, signed mantissa)
     ///
     ///SAFETY: The number MUST NOT BE 0 or NaN
-    pub(crate) unsafe fn as_components(&self) -> (i8, i8) {
+    pub(crate) unsafe fn as_components(&self) -> (i8, u8) {
         match State::get(self) {
             State::Normal => (
                 self.exponent_value().unwrap(),
@@ -203,6 +195,55 @@ impl Fp8 {
             State::Subnormal => (-6, self.mantissa_value().unwrap()),
 
             _ => unreachable!(),
+        }
+    }
+
+    pub fn test(
+        percent_tolerance: f32,
+
+        f_impl: fn(&Fp8, &Fp8) -> (Fp8, State),
+        f_fpu: fn(f32, f32) -> f32
+    ) {
+        for i in 0b0000_0000..=0b1111_1111 {
+            let a = Fp8::from(i);
+
+            for j in 0b0000_0000..=0b1111_1111 {
+                let b = Fp8::from(j);
+
+                let (r, s) = f_impl(&a, &b);
+
+                let fpu_r = f_fpu(Into::<f32>::into(a), Into::<f32>::into(b));
+                let e = percent_tolerance * fpu_r / 100.0;
+
+                let r_c: f32 = r.into();
+
+                let in_range = f32::abs(fpu_r - e) < f32::abs(r_c) &&
+                    f32::abs(r_c) < f32::abs(fpu_r + e);
+                let equals = r_c == fpu_r;
+
+                if !(in_range || equals) && s != State::NaN {
+                    println!(
+                        "Differs at: {} + {} = {}, But FP unit says: {}",
+                        Into::<f32>::into(a),
+                        Into::<f32>::into(b),
+                        Into::<f32>::into(r),
+                        f_fpu(Into::<f32>::into(a), Into::<f32>::into(b))
+                    );
+                }
+            }
+        }
+    }
+
+    pub fn dump_csv(f: fn(&Fp8, &Fp8) -> (Fp8, State)) {
+        for i in 0..=255 {
+            for j in 0..=255 {
+                println!(
+                    "{:08b},{:08b},{:08b}",
+                    i,
+                    j,
+                    Into::<u8>::into(f(&Fp8::from(i), &Fp8::from(j)).0)
+                );
+            }
         }
     }
 }
@@ -243,6 +284,14 @@ impl From<u8> for Fp8 {
     ///Converts a raw byte into an FP8 variable.
     fn from(value: u8) -> Self {
         Self { byte: value }
+    }
+}
+
+impl Into<u8> for Fp8 {
+    ///Returns the raw byte representation of the
+    ///FP8 number.
+    fn into(self) -> u8 {
+        self.byte
     }
 }
 
