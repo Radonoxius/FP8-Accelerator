@@ -11,6 +11,5 @@ rr = "run --release"
 #linker = "arm-linux-gnueabihf-gcc"
 #rustflags = [
 #    "-C", "target-cpu=cortex-a9",
-#    "-C", "link-arg=-static",
-#    "-C", "embed-bitcode=yes", "-C", "lto=yes"
+#    "-C", "link-arg=-static"
 #]

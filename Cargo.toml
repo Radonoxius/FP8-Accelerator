@@ -7,4 +7,8 @@ edition = "2024"
 resolver = "3"
 members = ["vfp8-driver"]
 
+[profile.release]
+lto = "fat"
+codegen-units = 1
+
 [dependencies]
