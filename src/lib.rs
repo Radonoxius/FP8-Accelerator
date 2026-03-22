@@ -223,7 +223,7 @@ impl Fp8 {
 
                 if !(in_range || equals) && s != State::NaN {
                     println!(
-                        "{} + {} = {}, FPU: {}",
+                        "{}, {}, {}, FPU: {}",
                         Into::<f32>::into(a),
                         Into::<f32>::into(b),
                         Into::<f32>::into(r),
