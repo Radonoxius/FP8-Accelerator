@@ -198,7 +198,7 @@ impl Fp8 {
         }
     }
 
-    pub fn test(
+    pub fn print_differs(
         percent_tolerance: f32,
 
         f_impl: fn(&Fp8, &Fp8) -> (Fp8, State),
@@ -217,13 +217,13 @@ impl Fp8 {
 
                 let r_c: f32 = r.into();
 
-                let in_range = f32::abs(fpu_r - e) < f32::abs(r_c) &&
-                    f32::abs(r_c) < f32::abs(fpu_r + e);
+                let in_range = f32::abs(fpu_r) - f32::abs(e) < f32::abs(r_c) &&
+                    f32::abs(r_c) < f32::abs(fpu_r) + f32::abs(e);
                 let equals = r_c == fpu_r;
 
                 if !(in_range || equals) && s != State::NaN {
                     println!(
-                        "Differs at: {} + {} = {}, But FP unit says: {}",
+                        "{} + {} = {}, FPU: {}",
                         Into::<f32>::into(a),
                         Into::<f32>::into(b),
                         Into::<f32>::into(r),
@@ -234,7 +234,7 @@ impl Fp8 {
         }
     }
 
-    pub fn dump_csv(f: fn(&Fp8, &Fp8) -> (Fp8, State)) {
+    pub fn print_as_csv(f: fn(&Fp8, &Fp8) -> (Fp8, State)) {
         for i in 0..=255 {
             for j in 0..=255 {
                 println!(
