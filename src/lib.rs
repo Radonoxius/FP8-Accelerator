@@ -5,6 +5,7 @@ use crate::state::State;
 pub mod state;
 
 pub mod addition;
+pub mod subtraction;
 
 ///Represents an 8 bit, E4M3 floating
 ///point number.

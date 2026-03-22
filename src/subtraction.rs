@@ -2,8 +2,8 @@ use std::ops;
 
 use crate::{Fp8, state::State};
 
-///Returns a + b and the state of the result.
-pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
+///Returns a - b and the state of the result.
+pub fn subtract(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let a_state = State::get(a);
     let b_state = State::get(b);
 
@@ -18,7 +18,7 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     else if a_state == State::Zero && b_state == State::Zero {
         return (Fp8::zero(), State::Zero);
     } else if a_state == State::Zero {
-        return (*b, b_state);
+        return ((*b).flip_sign(), b_state);
     } else if b_state == State::Zero {
         return (*a, a_state);
     }
@@ -35,68 +35,68 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     let result_sign;
 
-    //Fixed Point Add logic
+    //Fixed Point Sub logic
     let (mut result_exp, sum) = if a_exp > b_exp {
         let shift = a_exp - b_exp;
 
         if a.is_positive() && b.is_positive() {
             result_sign = 0;
-            (a_exp, a_mant + b_mant.unbounded_shr(shift as u32))
+            (a_exp, a_mant - b_mant.unbounded_shr(shift as u32))
         } else if a.is_positive() && !b.is_positive() {
             result_sign = 0;
-            (a_exp, a_mant - b_mant.unbounded_shr(shift as u32))
+            (a_exp, a_mant + b_mant.unbounded_shr(shift as u32))
         } else if !a.is_positive() && b.is_positive() {
             result_sign = 1;
-            (a_exp, a_mant - b_mant.unbounded_shr(shift as u32))
+            (a_exp, a_mant + b_mant.unbounded_shr(shift as u32))
         } else {
             result_sign = 1;
-            (a_exp, a_mant + b_mant.unbounded_shr(shift as u32))
+            (a_exp, a_mant - b_mant.unbounded_shr(shift as u32))
         }
     } else if a_exp == b_exp {
         if a_mant >= b_mant {
             if a.is_positive() && b.is_positive() {
                 result_sign = 0;
-                (a_exp, a_mant + b_mant)
+                (a_exp, a_mant - b_mant)
             } else if a.is_positive() && !b.is_positive() {
                 result_sign = 0;
-                (a_exp, a_mant - b_mant)
+                (a_exp, a_mant + b_mant)
             } else if !a.is_positive() && b.is_positive() {
                 result_sign = 1;
-                (a_exp, a_mant - b_mant)
+                (a_exp, a_mant + b_mant)
             } else {
                 result_sign = 1;
-                (a_exp, a_mant + b_mant)
+                (a_exp, a_mant - b_mant)
             }
         } else {
             if b.is_positive() && a.is_positive() {
-                result_sign = 0;
-                (a_exp, a_mant + b_mant)
+                result_sign = 1;
+                (a_exp, b_mant - a_mant)
             } else if b.is_positive() && !a.is_positive() {
+                result_sign = 1;
+                (a_exp, b_mant + a_mant)
+            } else if !b.is_positive() && a.is_positive() {
+                result_sign = 0;
+                (a_exp, b_mant + a_mant)
+            } else {
                 result_sign = 0;
                 (a_exp, b_mant - a_mant)
-            } else if !b.is_positive() && a.is_positive() {
-                result_sign = 1;
-                (a_exp, b_mant - a_mant)
-            } else {
-                result_sign = 1;
-                (a_exp, a_mant + b_mant)
             }
         }
     } else {
         let shift = b_exp - a_exp;
 
         if b.is_positive() && a.is_positive() {
-            result_sign = 0;
-            (b_exp, b_mant + a_mant.unbounded_shr(shift as u32))
+            result_sign = 1;
+            (b_exp, b_mant - a_mant.unbounded_shr(shift as u32))
         } else if b.is_positive() && !a.is_positive() {
-            result_sign = 0;
-            (b_exp, b_mant - a_mant.unbounded_shr(shift as u32))
-        } else if !b.is_positive() && a.is_positive() {
-            result_sign = 1;
-            (b_exp, b_mant - a_mant.unbounded_shr(shift as u32))
-        } else {
             result_sign = 1;
             (b_exp, b_mant + a_mant.unbounded_shr(shift as u32))
+        } else if !b.is_positive() && a.is_positive() {
+            result_sign = 0;
+            (b_exp, b_mant + a_mant.unbounded_shr(shift as u32))
+        } else {
+            result_sign = 0;
+            (b_exp, b_mant - a_mant.unbounded_shr(shift as u32))
         }
     };
 
@@ -148,10 +148,10 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
 }
 
-impl ops::Add for Fp8 {
+impl ops::Sub for Fp8 {
     type Output = Self;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        add(&self, &rhs).0
+    fn sub(self, rhs: Self) -> Self::Output {
+        subtract(&self, &rhs).0
     }
 }

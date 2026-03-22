@@ -1,9 +1,9 @@
-use soft_fp8::{Fp8, addition::add};
+use soft_fp8::{Fp8, subtraction::subtract};
 
 fn main() {
     Fp8::print_differs(
         25.0,
-        |a, b| add(a, b),
-        |af, bf| af + bf
+        |a, b| subtract(a, b),
+        |af, bf| af - bf
     );
 }
