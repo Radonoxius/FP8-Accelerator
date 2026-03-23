@@ -15,9 +15,9 @@ fn bencher(
     fail_counter85: &mut u32,
     fail_counter75: &mut u32
 ) {
-    let a = Into::<f32>::into(Fp8::from(a));
-    let b = Into::<f32>::into(Fp8::from(b));
-    let fpga_r = Into::<f32>::into(Fp8::from(i_res));
+    let a = Fp8::from(a).into();
+    let b = Fp8::from(b).into();
+    let fpga_r = Fp8::from(i_res).into();
 
     let r_state = State::get(&Fp8::from(i_res));
 
