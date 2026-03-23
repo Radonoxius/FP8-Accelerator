@@ -6,6 +6,7 @@ pub mod state;
 
 pub mod addition;
 pub mod subtraction;
+pub mod multiplication;
 
 ///Represents an 8 bit, E4M3 floating
 ///point number.
