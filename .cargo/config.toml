@@ -3,6 +3,7 @@ b = "build --all"
 br = "build --release --all"
 r = "run"
 rr = "run --release"
+accu-check = "run --release --bin accu-check"
 
 #[build]
 #target = "armv7-unknown-linux-musleabihf"
