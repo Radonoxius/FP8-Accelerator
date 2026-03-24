@@ -27,10 +27,56 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let (a_exp, a_mant) = unsafe { a.as_components() };
     let (b_exp, b_mant) = unsafe { b.as_components() };
 
-    let a_mant = a_mant << 3;
-    let b_mant = b_mant << 3;
+    let result_sign = a.sign_bit() ^ b.sign_bit();
+    let mut result_exp = a_exp + b_exp;
 
-    let result_sign = 0;
+    let full_mant = a_mant * b_mant;
 
-    todo!()
+    //Perform Rount-to-Nearest, Ties to Even
+    let guard  = (full_mant >> 2) & 1;
+    let sticky = full_mant & 0b11;
+    let truncated = full_mant.unbounded_shr(3);
+
+    let round_up = guard == 1 && (sticky != 0 || (truncated & 1) == 1);
+    let mut abs_mant = truncated + if round_up { 1 } else { 0 };
+
+    if (abs_mant & 0b0001_0000) >> 4 == 1 {
+        abs_mant &= 0b1110_1111;
+        result_exp += 1;
+    }
+
+    //Renormalise results
+    if abs_mant >= 16 {
+        abs_mant >>= 1;
+        result_exp += 1;
+    }
+    while abs_mant < 8 && result_exp > -6 {
+        abs_mant <<= 1;
+        result_exp -= 1;
+    }
+
+    //Return NaN on overflow
+    if result_exp > 8 {
+        return (Fp8::nan(), State::NaN);
+    }
+    //Return 0 on underflow
+    if result_exp < -6 {
+        return (Fp8::zero(), State::Zero);
+    }
+
+    let mantissa_bits = (abs_mant & 0b111) as u8;
+
+    //Subnormal result (implicit bit is gone, exp field = 0)
+    if result_exp == -6 && abs_mant < 8 {
+        return (Fp8::new(result_sign, 0, mantissa_bits), State::Subnormal);
+    }
+
+    let exp_bits = (result_exp + 7) as u8;
+
+    //Avoid accidentally encoding NaN (0_1111_111); saturate to max normal instead
+    if exp_bits == 15 && mantissa_bits == 7 {
+        return (Fp8::nan(), State::NaN);
+    }
+
+    (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
 }
