@@ -68,7 +68,10 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     //Subnormal result (implicit bit is gone, exp field = 0)
     if result_exp == -6 && abs_mant < 8 {
-        return (Fp8::new(result_sign, 0, mantissa_bits), State::Subnormal);
+        return (
+            Fp8::new(result_sign, 0, mantissa_bits),
+            State::Subnormal
+        );
     }
 
     let exp_bits = (result_exp + 7) as u8;
