@@ -7,17 +7,17 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     if a_state == State::NaN && b_state == State::NaN {
         return (Fp8::nan(), State::NaN);
     } else if a_state == State::NaN {
-        return (*a, State::NaN);
+        return (a.xor_signed(a, b), State::NaN);
     } else if b_state == State::NaN {
-        return (*b, State::NaN);
+        return (b.xor_signed(a, b), State::NaN);
     }
     
     else if a_state == State::Zero && b_state == State::Zero {
         return (Fp8::zero(), State::Zero);
     } else if a_state == State::Zero {
-        return (*a, State::Zero);
+        return (a.xor_signed(a, b), State::Zero);
     } else if b_state == State::Zero {
-        return (*b, State::Zero);
+        return (b.xor_signed(a, b), State::Zero);
     }
 
     //Get (exponent, mantissa) for each operand.
@@ -41,7 +41,7 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let mut abs_mant = truncated + if round_up { 1 } else { 0 };
 
     if (abs_mant & 0b0001_0000) >> 4 == 1 {
-        abs_mant &= 0b1110_1111;
+        abs_mant >>= 1;
         result_exp += 1;
     }
 
@@ -75,7 +75,10 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     //Avoid accidentally encoding NaN (0_1111_111); saturate to max normal instead
     if exp_bits == 15 && mantissa_bits == 7 {
-        return (Fp8::nan(), State::NaN);
+        return (
+            Fp8::new(result_sign, 15, 7),
+            State::Normal
+        );
     }
 
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)

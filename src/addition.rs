@@ -142,7 +142,10 @@ pub fn add(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     //Avoid accidentally encoding NaN (0_1111_111); saturate to max normal instead
     if exp_bits == 15 && mantissa_bits == 7 {
-        return (Fp8::nan(), State::NaN);
+        return (
+            Fp8::new(result_sign, 15, 7),
+            State::Normal
+        );
     }
 
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)

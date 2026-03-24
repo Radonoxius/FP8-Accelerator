@@ -200,6 +200,15 @@ impl Fp8 {
         }
     }
 
+    pub(crate) fn xor_signed(&self, a: &Self, b: &Self) -> Self {
+        let sign_bit = a.sign_bit() ^ b.sign_bit();
+
+        Self {
+            byte: (self.byte & 0b0111_1111) |
+                (sign_bit << 7)
+        }
+    }
+
     pub fn print_differs(
         percent_tolerance: f32,
 
