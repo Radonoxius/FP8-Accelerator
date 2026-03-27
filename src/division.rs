@@ -33,7 +33,7 @@ pub fn divide(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let (a_exp, a_mant) = unsafe { a.as_components() };
     let (b_exp, b_mant) = unsafe { b.as_components() };
 
-    let a_mant = (a_mant as u16) << 6;
+    let a_mant = (a_mant as u16) << 12;
 
     let result_sign = a.sign_bit() ^ b.sign_bit();
     let mut result_exp = a_exp - b_exp;
@@ -41,9 +41,9 @@ pub fn divide(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let full_mant = a_mant / b_mant as u16;
 
     //Perform Rount-to-Nearest, Ties to Even
-    let guard  = (full_mant >> 2) & 1;
-    let sticky = full_mant & 0b11;
-    let truncated = full_mant.unbounded_shr(3);
+    let guard  = (full_mant >> 8) & 1;
+    let sticky = (full_mant & 0b11000000) >> 6;
+    let truncated = full_mant.unbounded_shr(9);
 
     let round_up = guard == 1 && (sticky != 0 || (truncated & 1) == 1);
     let mut abs_mant = truncated + if round_up { 1 } else { 0 };
