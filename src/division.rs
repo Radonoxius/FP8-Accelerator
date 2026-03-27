@@ -2,8 +2,8 @@ use std::ops;
 
 use crate::{Fp8, state::State};
 
-///Returns a * b and the state of the result.
-pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
+///Returns a / b and the state of the result.
+pub fn divide(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let a_state = State::get(a);
     let b_state = State::get(b);
 
@@ -16,11 +16,14 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     }
     
     else if a_state == State::Zero && b_state == State::Zero {
-        return (Fp8::zero(), State::Zero);
+        return (Fp8::nan(), State::NaN);
     } else if a_state == State::Zero {
         return (a.xor_signed(a, b), State::Zero);
     } else if b_state == State::Zero {
-        return (b.xor_signed(a, b), State::Zero);
+        return (
+            (&Fp8::nan()).xor_signed(a, b),
+            State::NaN
+        );
     }
 
     //Get (exponent, mantissa) for each operand.
@@ -30,21 +33,16 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let (a_exp, a_mant) = unsafe { a.as_components() };
     let (b_exp, b_mant) = unsafe { b.as_components() };
 
+    let a_mant = (a_mant as u16) << 6;
+
     let result_sign = a.sign_bit() ^ b.sign_bit();
-    let mut result_exp = a_exp + b_exp;
+    let mut result_exp = a_exp - b_exp;
 
-    let mut full_mant = a_mant * b_mant;
-    let mut lost_bit = 0;
-
-    if (full_mant & 0b1000_0000) >> 7 == 1 {
-        lost_bit = full_mant & 1;
-        full_mant >>= 1;
-        result_exp += 1;
-    }
+    let full_mant = a_mant / b_mant as u16;
 
     //Perform Rount-to-Nearest, Ties to Even
     let guard  = (full_mant >> 2) & 1;
-    let sticky = (full_mant & 0b11) | lost_bit;
+    let sticky = full_mant & 0b11;
     let truncated = full_mant.unbounded_shr(3);
 
     let round_up = guard == 1 && (sticky != 0 || (truncated & 1) == 1);
@@ -92,10 +90,10 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
 }
 
-impl ops::Mul for Fp8 {
+impl ops::Div for Fp8 {
     type Output = Self;
 
-    fn mul(self, rhs: Self) -> Self::Output {
-        multiply(&self, &rhs).0
+    fn div(self, rhs: Self) -> Self::Output {
+        divide(&self, &rhs).0
     }
 }
