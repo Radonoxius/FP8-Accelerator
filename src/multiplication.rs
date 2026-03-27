@@ -1,3 +1,5 @@
+use std::ops;
+
 use crate::{Fp8, state::State};
 
 pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
@@ -30,20 +32,22 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let result_sign = a.sign_bit() ^ b.sign_bit();
     let mut result_exp = a_exp + b_exp;
 
-    let full_mant = a_mant * b_mant;
+    let mut full_mant = a_mant * b_mant;
+    let mut lost_bit = 0;
+
+    if (full_mant & 0b1000_0000) >> 7 == 1 {
+        lost_bit = full_mant & 1;
+        full_mant >>= 1;
+        result_exp += 1;
+    }
 
     //Perform Rount-to-Nearest, Ties to Even
     let guard  = (full_mant >> 2) & 1;
-    let sticky = full_mant & 0b11;
+    let sticky = (full_mant & 0b11) | lost_bit;
     let truncated = full_mant.unbounded_shr(3);
 
     let round_up = guard == 1 && (sticky != 0 || (truncated & 1) == 1);
     let mut abs_mant = truncated + if round_up { 1 } else { 0 };
-
-    if (abs_mant & 0b0001_0000) >> 4 == 1 {
-        abs_mant >>= 1;
-        result_exp += 1;
-    }
 
     //Renormalise results
     if abs_mant >= 16 {
@@ -79,10 +83,18 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     //Avoid accidentally encoding NaN (0_1111_111); saturate to max normal instead
     if exp_bits == 15 && mantissa_bits == 7 {
         return (
-            Fp8::new(result_sign, 15, 7),
+            Fp8::new(result_sign, 15, 6),
             State::Normal
         );
     }
 
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
+}
+
+impl ops::Mul for Fp8 {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        multiply(&self, &rhs).0
+    }
 }
