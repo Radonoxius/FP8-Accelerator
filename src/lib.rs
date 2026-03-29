@@ -39,6 +39,11 @@ impl Fp8 {
         Self { byte: 0 }
     }
 
+    ///Creates +1.0
+    pub fn one() -> Self {
+        Self { byte: 0b0_0111_000 }
+    }
+
     ///Creates +NaN.
     pub fn nan() -> Self {
         Self { byte: 0b0111_1111 }
@@ -317,14 +322,14 @@ impl Into<f32> for Fp8 {
 
         return if exp == None && mantissa == None {
             f32::NAN
-        } else if exp == None && mantissa != None {
+        } else if let Some(_) = mantissa && exp == None {
             if self.is_positive() {
                 0.0
             }
             else {
                 -0.0
             }
-        } else if exp != None && mantissa == None {
+        } else if let Some(_) = exp && mantissa == None {
             unreachable!()
         } else {
             let exp = exp.unwrap();

@@ -2,6 +2,50 @@ use std::ops;
 
 use crate::{Fp8, state::State};
 
+///Returns 1 / n.
+pub fn reciprocal(n: &Fp8) -> Fp8 {
+    let one = Fp8::one();
+    let n_state = State::get(n);
+
+    if n.byte == 0b0_0111_000 ||
+        n.byte == 0b1_0111_000 {
+        return one.xor_signed(&one, n);
+    }
+
+    //Ready to witness this Hell?
+    if n_state == State::NaN {
+        return *n;
+    } else if n_state == State::Zero {
+        return Fp8::nan().xor_signed(&one, n);
+    } else if n_state == State::Subnormal {
+        let result_sign = n.sign_bit();
+        if n.mantissa_bits() == 1 {
+            return Fp8::new(result_sign, 15, 6)
+        }
+        let recip_bits = 128 - (
+            (n.mantissa_bits() << 2) -
+            (n.mantissa_bits() >> 2)
+        ) - if n.mantissa_bits() > 4 { 0 } else { 1 };
+
+        Fp8 { byte: recip_bits | result_sign << 7 }
+    } else {
+        let result_sign = n.sign_bit();
+        let recip_bits;
+
+        if n.byte & 0b0111_1111 < 106 {
+            recip_bits = 111 -
+                (n.exponent_bits() << 3) -
+                n.mantissa_bits();
+        } else {
+            recip_bits = 32 -
+            (n.exponent_bits() << 1) -
+            (n.mantissa_bits() >> 2);
+        }
+
+        Fp8 { byte: recip_bits | result_sign << 7 }
+    }
+}
+
 ///Returns a / b and the state of the result.
 pub fn divide(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     let a_state = State::get(a);
