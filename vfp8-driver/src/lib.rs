@@ -33,7 +33,7 @@ impl Vfp8Accelerator {
                     PROT_READ | PROT_WRITE,
                     MAP_SHARED,
                     mem_fd,
-                    LW_BRIDGE_BASE as i64
+                    (LW_BRIDGE_BASE + BRIDGE_OFFSET) as i64
                 )
             };
 

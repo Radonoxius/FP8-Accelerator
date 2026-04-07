@@ -2,7 +2,7 @@ use std::{ffi::c_void, ptr::null_mut};
 
 use libc::{MAP_FAILED, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
 
-use crate::{LW_BRIDGE_BASE, SPAN, Vfp8Accelerator};
+use crate::{BRIDGE_OFFSET, LW_BRIDGE_BASE, SPAN, Vfp8Accelerator};
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn init() -> Vfp8Accelerator {
@@ -22,7 +22,7 @@ pub unsafe extern "C" fn init() -> Vfp8Accelerator {
                 PROT_READ | PROT_WRITE,
                 MAP_SHARED,
                 mem_fd,
-                LW_BRIDGE_BASE as i64
+                (LW_BRIDGE_BASE + BRIDGE_OFFSET) as i64
             )
         };
 
