@@ -72,7 +72,25 @@ module fp8_unit(
 //  REG/WIRE declarations
 //=======================================================
 
-
+	system u0 (
+        .clk_clk            (CLOCK_50),            //    clk.clk
+        .memory_mem_a       (HPS_DDR3_ADDR),       // memory.mem_a
+        .memory_mem_ba      (HPS_DDR3_BA),      //       .mem_ba
+        .memory_mem_ck      (HPS_DDR3_CK_P),      //       .mem_ck
+        .memory_mem_ck_n    (HPS_DDR3_CK_N),    //       .mem_ck_n
+        .memory_mem_cke     (HPS_DDR3_CKE),     //       .mem_cke
+        .memory_mem_cs_n    (HPS_DDR3_CS_N),    //       .mem_cs_n
+        .memory_mem_ras_n   (HPS_DDR3_RAS_N),   //       .mem_ras_n
+        .memory_mem_cas_n   (HPS_DDR3_CAS_N),   //       .mem_cas_n
+        .memory_mem_we_n    (HPS_DDR3_WE_N),    //       .mem_we_n
+        .memory_mem_reset_n (HPS_DDR3_RESET_N), //       .mem_reset_n
+        .memory_mem_dq      (HPS_DDR3_DQ),      //       .mem_dq
+        .memory_mem_dqs     (HPS_DDR3_DQS_P),     //       .mem_dqs
+        .memory_mem_dqs_n   (HPS_DDR3_DQS_N),   //       .mem_dqs_n
+        .memory_mem_odt     (HPS_DDR3_ODT),     //       .mem_odt
+        .memory_mem_dm      (HPS_DDR3_DM),      //       .mem_dm
+        .memory_oct_rzqin   (HPS_DDR3_RZQ)    //       .oct_rzqin
+    );
 
 
 //=======================================================

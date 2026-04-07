@@ -1,0 +1,23 @@
+module controller (
+    input wire a_clk,
+    input wire reset_n,
+
+    input wire write,
+    input wire [127:0] writedata,
+
+    input wire read,
+    output reg [127:0] readdata
+);
+    reg [127:0] waste;
+
+    always @(posedge a_clk or negedge reset_n) begin
+        if(!reset_n)
+            waste <= 0;
+        
+        else if(write)
+            waste <= 2 * writedata;
+
+        else if(read)
+            readdata <= waste;
+    end
+endmodule

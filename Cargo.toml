@@ -6,7 +6,7 @@ default-run = "soft-fp8"
 
 [workspace]
 resolver = "3"
-members = ["vfp8-driver"]
+members = ["vfp8-driver", "vfp8-runner"]
 
 [profile.release]
 lto = "fat"

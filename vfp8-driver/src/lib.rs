@@ -8,6 +8,8 @@ use libc::{MAP_FAILED, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close,
 use crate::errors::DriverError;
 
 const LW_BRIDGE_BASE: usize = 0xFF200000;
+const BRIDGE_OFFSET: usize = 0;
+
 const SPAN: usize = 0x1000;
 
 #[repr(C)]
