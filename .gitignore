@@ -1,4 +1,5 @@
 fpga/obj_dir
+fpga/logic/obj_dir
 
 fpga/db
 fpga/incremental_db
