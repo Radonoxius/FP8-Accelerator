@@ -6,9 +6,9 @@ fn main() {
     let mut dummy = [1; 16];
     dummy[0] = 5;
 
-    device.write_reg_at(0, dummy);
+    let _ = device.write_reg_at(0, dummy);
     let store = device.read_reg_at(0);
 
     println!("Sent {:?}", dummy);
-    println!("Got {:?}!", store);
+    println!("Got {:?}!", store.unwrap());
 }

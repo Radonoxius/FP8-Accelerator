@@ -1,33 +1,33 @@
-use std::ffi::c_void;
+use std::ptr::{read_volatile, write_volatile};
 
-use libc::{memcpy, memmove};
-
-use crate::{U128, Vfp8Accelerator};
+use crate::{U128, Vfp8Accelerator, errors::DriverError};
 
 impl Vfp8Accelerator {
-    pub fn read_reg_at(&self, offset: usize) -> U128 {
-        let mut res = [0; 16];
+    pub fn read_reg_at(&self, offset: usize) -> Result<U128, DriverError> {
         unsafe {
-            if offset <= 0x1000 {
-                memcpy(
-                    &raw mut res as *mut c_void,
-                    (self.base_addr as usize + offset) as *const c_void,
-                    16
-                );
+            return if offset <= 0x1000 {
+                Ok(
+                    read_volatile(
+                        (self.base_addr as usize + offset) as *mut U128
+                    )
+                )
+            } else {
+                Err(DriverError::OutOfBounds)
             }
         }
-        
-        res
     }
 
-    pub fn write_reg_at(&mut self, offset: usize, value: U128) {
+    pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
         unsafe {
             if offset <= 0x1000 {
-                memmove(
-                    (self.base_addr as usize + offset) as *mut c_void,
-                    &raw const value as *const c_void,
-                    16
+                write_volatile(
+                    (self.base_addr as usize + offset) as *mut U128,
+                    value,
                 );
+
+                Ok(())
+            } else {
+                Err(DriverError::OutOfBounds)
             }
         }
     }

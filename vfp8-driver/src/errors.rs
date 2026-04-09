@@ -3,7 +3,9 @@ use std::{error::Error, fmt::{Debug, Display}};
 #[derive(Debug)]
 pub enum DriverError {
     MemFdError,
-    MmapError
+    MmapError,
+
+    OutOfBounds
 }
 
 impl Display for DriverError {
@@ -17,6 +19,11 @@ impl Display for DriverError {
             Self::MmapError =>
                 f.write_str(
                     "An error occured while obtaining virtual address of the bus. Try running the program as root."
+                ),
+
+            Self::OutOfBounds =>
+                f.write_str(
+                    "The memory offset for read/write is out of bounds! 0x1000 is the maximum offset!"
                 )
         }
     }
