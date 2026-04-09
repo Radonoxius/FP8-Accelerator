@@ -12,11 +12,13 @@ RBF_NAME='controller'
 DISK='sdb2'
 sudo umount /media/$ME/e3235a93-c4b0-4371-8e13-8b492281ed57
 
+chmod +x $FPGA_BUILD_DIR/$RBF_NAME.rbf
+
 mkdir -p sdcard
 sudo mount -o rw /dev/$DISK sdcard
 
 sudo rm $DE_HOME/soft-fp8
-sudo cp $RUST_BUILD_DIR/release/soft-fp8 \
+sudo cp $RUST_BUILD_DIR/release/vfp8-runner \
     run.sh $FPGA_BUILD_DIR/$RBF_NAME.rbf $DE_HOME/
 
 sync

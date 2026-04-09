@@ -1,20 +1,23 @@
 use std::{ffi::c_void, ptr::null_mut};
 
 pub mod errors;
+pub mod mem;
 pub mod ffi;
 
-use libc::{MAP_FAILED, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
+use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
 
 use crate::errors::DriverError;
 
-const LW_BRIDGE_BASE: usize = 0xFF200000;
+const AXI_BRIDGE_BASE: usize = 0xC000_0000;
 const BRIDGE_OFFSET: usize = 0;
 
 const SPAN: usize = 0x1000;
 
+pub type U128 = [u8; 16];
+
 #[repr(C)]
 pub struct Vfp8Accelerator {
-    base_addr: *mut u32,
+    pub(crate) base_addr: *mut u32,
     mem_fd: i32
 }
 
@@ -31,9 +34,9 @@ impl Vfp8Accelerator {
                     null_mut(),
                     SPAN,
                     PROT_READ | PROT_WRITE,
-                    MAP_SHARED,
+                    MAP_SHARED | MAP_POPULATE,
                     mem_fd,
-                    (LW_BRIDGE_BASE + BRIDGE_OFFSET) as i64
+                    (AXI_BRIDGE_BASE + BRIDGE_OFFSET) as i64
                 )
             };
 
