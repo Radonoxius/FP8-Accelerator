@@ -5,7 +5,7 @@ One of the popular data types used in quantization is the FP8 E4M3 type, the flo
 
 This project aims to create a working model of a `Floating Point Unit` **for the FP8 E4M3 type**.
 
-The FP8 implementation is the one defined by Nvidia and Arm for ML use-cases.
+The FP8 type used here is the one defined by Nvidia and ARM for ML use-cases.
 
 ## Technical Details
 This project is only compatible with the DE1-SoC board.
