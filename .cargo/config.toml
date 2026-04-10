@@ -9,8 +9,14 @@ accu-check = "run --release --bin accu-check"
 #target = "armv7-unknown-linux-musleabihf"
 #
 #[target.armv7-unknown-linux-musleabihf]
-#linker = "arm-linux-gnueabihf-gcc"
+#linker = "clang"
 #rustflags = [
+#    "-C", "link-arg=--target=arm-linux-musleabihf",
+#    "-C", "link-arg=--sysroot=/usr/arm-linux-gnueabihf",
+#    "-C", "link-arg=-fuse-ld=lld",
+#
 #    "-C", "target-cpu=cortex-a9",
+#    "-C", "target-feature=+neon,+vfp3",
+#
 #    "-C", "link-arg=-static"
 #]
