@@ -60,11 +60,11 @@ pub fn inverse(n: &Fp8) -> Fp8 {
     } else if n_state == State::Zero {
         return Fp8::nan().xor_signed(&one, n);
     } else {
-        let result_sign = n.sign_bit();
-        let recip_bits: u8 =
+        let _result_sign = n.sign_bit();
+        let _recip_bits: u8 =
             (u16::MAX / n.mantissa_value().unwrap() as u16) as u8;
 
-        let result_exp = (8 - n.exponent_value().unwrap()) as u8;
+        let _result_exp = (8 - n.exponent_value().unwrap()) as u8;
 
         todo!()
     }
