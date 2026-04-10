@@ -3,7 +3,7 @@ use std::ops;
 use crate::{Fp8, state::State};
 
 ///Returns 1 / n.
-pub fn reciprocal(n: &Fp8) -> Fp8 {
+pub fn fast_inverse(n: &Fp8) -> Fp8 {
     let one = Fp8::one();
     let n_state = State::get(n);
 
@@ -43,6 +43,30 @@ pub fn reciprocal(n: &Fp8) -> Fp8 {
         }
 
         Fp8 { byte: recip_bits | result_sign << 7 }
+    }
+}
+
+pub fn inverse(n: &Fp8) -> Fp8 {
+    let one = Fp8::one();
+    let n_state = State::get(n);
+
+    if n.byte == 0b0_0111_000 ||
+        n.byte == 0b1_0111_000 {
+        return one.xor_signed(&one, n);
+    }
+
+    if n_state == State::NaN {
+        return *n;
+    } else if n_state == State::Zero {
+        return Fp8::nan().xor_signed(&one, n);
+    } else {
+        let result_sign = n.sign_bit();
+        let recip_bits: u8 =
+            (u16::MAX / n.mantissa_value().unwrap() as u16) as u8;
+
+        let result_exp = (8 - n.exponent_value().unwrap()) as u8;
+
+        todo!()
     }
 }
 

@@ -32,22 +32,23 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     let result_sign = a.sign_bit() ^ b.sign_bit();
     let mut result_exp = a_exp + b_exp;
+    result_exp += 1;
 
     let mut full_mant = a_mant * b_mant;
-    let mut lost_bit = 0;
 
-    if (full_mant & 0b1000_0000) >> 7 == 1 {
-        lost_bit = full_mant & 1;
-        full_mant >>= 1;
-        result_exp += 1;
+    while (full_mant & 0b1000_0000) >> 7 != 1 {
+        full_mant <<= 1;
+        result_exp -= 1;
     }
 
-    //Perform Rount-to-Nearest, Ties to Even
-    let guard  = (full_mant >> 2) & 1;
-    let sticky = (full_mant & 0b11) | lost_bit;
-    let truncated = full_mant.unbounded_shr(3);
+    let last_bit = full_mant & 1;
 
-    let round_up = guard == 1 && (sticky != 0 || (truncated & 1) == 1);
+    //Perform Rount-to-Nearest, Ties to Even
+    let guard  = (full_mant >> 3) & 1;
+    let round_sticky = ((full_mant & 0b110) >> 1) | last_bit;
+    let truncated = full_mant.unbounded_shr(4);
+
+    let round_up = guard == 1 && (round_sticky != 0 || (truncated & 1) == 1);
     let mut abs_mant = truncated + if round_up { 1 } else { 0 };
 
     //Renormalise results
