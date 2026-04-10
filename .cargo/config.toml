@@ -15,7 +15,5 @@ accu-check = "run --release --bin accu-check"
 #    "-C", "link-arg=-fuse-ld=lld",
 #
 #    "-C", "target-cpu=cortex-a9",
-#    "-C", "target-feature=+neon,+vfp3",
-#
-#    "-C", "link-arg=-static"
+#    "-C", "target-feature=+neon,+vfp3"
 #]
