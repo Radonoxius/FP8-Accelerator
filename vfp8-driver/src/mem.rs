@@ -1,11 +1,11 @@
 use std::ptr::{read_volatile, write_volatile};
 
-use crate::{U128, Vfp8Accelerator, errors::DriverError};
+use crate::{SPAN, U128, Vfp8Accelerator, errors::DriverError};
 
 impl Vfp8Accelerator {
     pub fn read_reg_at(&self, offset: usize) -> Result<U128, DriverError> {
         unsafe {
-            return if offset <= 0x1000 {
+            return if offset <= SPAN {
                 Ok(
                     read_volatile(
                         (self.base_addr as usize + offset) as *mut U128
@@ -19,7 +19,7 @@ impl Vfp8Accelerator {
 
     pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
         unsafe {
-            if offset <= 0x1000 {
+            if offset <= SPAN {
                 write_volatile(
                     (self.base_addr as usize + offset) as *mut U128,
                     value,
