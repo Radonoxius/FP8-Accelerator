@@ -29,8 +29,11 @@ fn bencher(
     let e75 = 25.0 * fpu_r / 100.0;
 
     let in_range = |err: f32| -> bool {
-        f32::abs(fpu_r) - f32::abs(err) <= f32::abs(fpga_r) &&
-        f32::abs(fpga_r) <= f32::abs(fpu_r) + f32::abs(err)
+        if fpu_r >= 0.0 {
+            fpu_r - err <= fpga_r && fpga_r <= fpu_r + err
+        } else {
+            fpu_r + err <= fpga_r && fpga_r <= fpu_r - err
+        }
     };
 
     if !in_range(e95) && r_state != State::NaN {
