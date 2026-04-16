@@ -2,9 +2,11 @@ use std::{ffi::c_void, ptr::null_mut};
 
 pub mod errors;
 pub mod mem;
+pub mod ops;
 pub mod ffi;
 
 use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
+use soft_fp8::Fp8;
 
 use crate::errors::DriverError;
 
@@ -15,11 +17,25 @@ const SPAN: usize = 0x1000;
 
 pub type U128 = [u8; 16];
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct Vfp8Accelerator {
     pub(crate) base_addr: *mut u32,
     mem_fd: i32
 }
+
+#[derive(Debug, Clone, Copy)]
+#[repr(C)]
+pub enum Vfp8Operation {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+
+    Halt
+}
+
+pub type OperandPair = (Fp8, Fp8);
 
 impl Vfp8Accelerator {
     pub fn take() -> Result<Self, DriverError> {
@@ -60,6 +76,19 @@ impl Drop for Vfp8Accelerator {
         unsafe {
             munmap(self.base_addr as *mut c_void, SPAN);
             close(self.mem_fd);
+        }
+    }
+}
+
+impl Into<u8> for Vfp8Operation {
+    fn into(self) -> u8 {
+        return match self {
+            Self::Add => 0b100_00000,
+            Self::Subtract => 0b101_00000,
+            Self::Multiply => 0b110_00000,
+            Self::Divide => 0b111_00000,
+
+            Self::Halt => 0b000_00000
         }
     }
 }

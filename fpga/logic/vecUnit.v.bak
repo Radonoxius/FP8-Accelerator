@@ -23,19 +23,4 @@ module vecUnit (
     wire [7:0] b3 = bus[48 +: 8];
     wire [7:0] r3 = result_vec[24 +: 8];
     opUnit u3(a3, b3, r3, global_opcode);
-	 
-	 wire [7:0] a4 = bus[72 +: 8];
-    wire [7:0] b4 = bus[64 +: 8];
-    wire [7:0] r4 = result_vec[32 +: 8];
-    opUnit u4(a4, b4, r4, global_opcode);
-
-    wire [7:0] a5 = bus[88 +: 8];
-    wire [7:0] b5 = bus[80 +: 8];
-    wire [7:0] r5 = result_vec[40 +: 8];
-    opUnit u5(a5, b5, r5, global_opcode);
-
-    wire [7:0] a6 = bus[104 +: 8];
-    wire [7:0] b6 = bus[96 +: 8];
-    wire [7:0] r6 = result_vec[48 +: 8];
-    opUnit u6(a6, b6, r6, global_opcode);
 endmodule

@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use soft_fp8::addition::add;
-use vfp8_driver::{U128, Vfp8Accelerator};
+use vfp8_driver::{U128, Vfp8Accelerator, Vfp8Operation};
 use vfp8_runner::fill_randoms;
 
 fn main() {
@@ -36,17 +36,30 @@ fn main() {
         );
     }
     let t2 = t1.elapsed();
-    println!("Soft Impl. took {} micros.", t2.as_millis());
+    println!("Soft Impl. took {} ms.", t2.as_millis());
+
+    println!("\n{:?}\n", rx[200]);
 
 
     let mut device = Vfp8Accelerator::take().unwrap();
 
-    let mut dummy = [1; 16];
-    dummy[0] = 5;
+    let t1 = Instant::now();
+    for i in 0..rx.capacity() {
+        rx[i] = device.compute(
+            Vfp8Operation::Add,
+            [
+                (ax[i][0].into(), bx[i][0].into()),
+                (ax[i][1].into(), bx[i][1].into()),
+                (ax[i][2].into(), bx[i][2].into()),
+                (ax[i][3].into(), bx[i][3].into()),
+                (ax[i][4].into(), bx[i][4].into()),
+                (ax[i][5].into(), bx[i][5].into()),
+                (ax[i][6].into(), bx[i][6].into())
+            ]
+        ).unwrap().unwrap()
+    }
+    let t2 = t1.elapsed();
+    println!("Hard Impl. took {} ms.", t2.as_millis());
 
-    let _ = device.write_reg_at(0, dummy);
-    let store = device.read_reg_at(0);
-
-    println!("Sent {:?}", dummy);
-    println!("Got {:?}!", store.unwrap());
+    println!("\n{:?}\n", rx[200]);
 }

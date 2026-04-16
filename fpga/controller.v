@@ -6,15 +6,19 @@ module controller (
     input  wire         read,
     output wire [127:0] readdata
 );
-    reg [127:0] waste;
+    reg [127:0] storage;
+	 reg [127:0] results;
+	 vecUnit u(storage, results[63:0]);
 
-    assign readdata = waste;
+    assign readdata = results;
 
     always @(posedge a_clk or negedge reset_n) begin
-        if (!reset_n)
-            waste <= 128'd0;
+        if (!reset_n) begin
+            storage <= 128'd0;
+				results <= 128'd0;
+		  end
 				
         else if (write)
-            waste <= writedata << 1;
+            storage <= writedata;
     end
 endmodule
