@@ -25,7 +25,7 @@ impl Vfp8Accelerator {
             operands[6].0.into(),
 
             0,
-            op.clone().into()
+            op.into()
         ];
 
         return match op {

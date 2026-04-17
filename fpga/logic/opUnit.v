@@ -5,7 +5,7 @@ module opUnit (
     input  wire [2:0] opcode
 );
     wire [7:0] add_result;
-    fp8_add adder (ax, bx, add_result);
+    fp8_adder u1(ax, bx, add_result);
 
     always @(*) begin
         case (opcode)

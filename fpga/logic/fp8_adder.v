@@ -1,4 +1,4 @@
-module fp8_add(
+module fp8_adder(
     input [7:0] A,
     input [7:0] B,
     output [7:0] P
