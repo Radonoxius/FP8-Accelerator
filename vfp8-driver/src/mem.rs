@@ -18,17 +18,11 @@ impl Vfp8Accelerator {
         //let w3: u32;
 
         unsafe {
-            //dmb osh
-            //ldrd r0, r1, [{addr}]
             core::arch::asm!(
-                "dsb sy",
-                // The {{ }} escapes the braces for the assembler
-                // Using explicit registers ensures w0 is the lowest register index
                 //"ldm {addr}, {{ r0, r1, r2, r3 }}",
                 "ldm {addr}, {{ r0, r1 }}",
                 "dsb sy",
                 addr = in(reg) addr,
-                // Bind the variables to the specific registers used in ldm
                 out("r0") w0,
                 out("r1") w1,
                 //out("r2") w2,
@@ -71,7 +65,6 @@ impl Vfp8Accelerator {
     //
     //    unsafe {
     //        core::arch::asm!(
-    //            "dsb sy",               // Ensure previous memory ops are complete
     //            "stm {addr}, {{r0, r1, r2, r3}}", // Burst write 128 bits
     //            "dsb sy",               // Ensure the write hits the bridge before continuing
     //            addr = in(reg) addr,
