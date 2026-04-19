@@ -215,6 +215,7 @@ impl Fp8 {
         }
     }
 
+    #[deprecated(note = "Not planned to be used.")]
     pub fn print_differs(
         percent_tolerance: f32,
 
@@ -251,7 +252,17 @@ impl Fp8 {
         }
     }
 
-    pub fn print_as_csv(f: fn(&Fp8, &Fp8) -> (Fp8, State)) {
+    pub fn print_as_csv1(f: fn(&Fp8) -> (Fp8, State)) {
+        for i in 0..=255 {
+            println!(
+                "{:08b},{:08b}",
+                i,
+                Into::<u8>::into(f(&Fp8::from(i)).0)
+            );
+        }
+    }
+
+    pub fn print_as_csv2(f: fn(&Fp8, &Fp8) -> (Fp8, State)) {
         for i in 0..=255 {
             for j in 0..=255 {
                 println!(
@@ -260,6 +271,22 @@ impl Fp8 {
                     j,
                     Into::<u8>::into(f(&Fp8::from(i), &Fp8::from(j)).0)
                 );
+            }
+        }
+    }
+
+    pub fn print_as_csv3(f: fn(&Fp8, &Fp8, &Fp8) -> (Fp8, State)) {
+        for i in 0..=255 {
+            for j in 0..=255 {
+                for k in 0..=255 {
+                    println!(
+                        "{:08b},{:08b},{:08b},{:08b}",
+                        i,
+                        j,
+                        k,
+                        Into::<u8>::into(f(&Fp8::from(i), &Fp8::from(j), &Fp8::from(k)).0)
+                    );
+                }
             }
         }
     }

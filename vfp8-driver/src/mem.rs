@@ -27,7 +27,7 @@ impl Vfp8Accelerator {
                 out("r1") w1,
                 //out("r2") w2,
                 //out("r3") w3,
-                options(nostack, preserves_flags),
+                options(nostack, preserves_flags)
             );
 
             //Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))

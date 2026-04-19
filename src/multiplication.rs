@@ -1,6 +1,6 @@
 use std::ops;
 
-use crate::{Fp8, state::State};
+use crate::{Fp8, addition::add, state::State};
 
 ///Returns a * b and the state of the result.
 pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
@@ -91,6 +91,11 @@ pub fn multiply(a: &Fp8, b: &Fp8) -> (Fp8, State) {
     }
 
     (Fp8::new(result_sign, exp_bits, mantissa_bits), State::Normal)
+}
+
+///Returns a * b + c and the state of the result.
+pub fn fma(a: &Fp8, b: &Fp8, c: &Fp8) -> (Fp8, State) {
+    add(&multiply(&a, &b).0, &c)
 }
 
 impl ops::Mul for Fp8 {

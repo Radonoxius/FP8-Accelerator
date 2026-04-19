@@ -5,7 +5,50 @@ use std::io::{BufRead, BufReader};
 use soft_fp8::Fp8;
 use soft_fp8::state::State;
 
-fn bencher(
+fn bencher1(
+    a: u8,
+    i_res: u8,
+    f: fn(f32) -> f32,
+    fail_counter95: &mut u32,
+    fail_counter90: &mut u32,
+    fail_counter85: &mut u32,
+    fail_counter75: &mut u32
+) {
+    let a = Fp8::from(a).into();
+    let fpga_r = Fp8::from(i_res).into();
+
+    let r_state = State::get(&Fp8::from(i_res));
+
+    let fpu_r = f(a);
+
+    let e95 = 5.0 * fpu_r / 100.0;
+    let e90 = 10.0 * fpu_r / 100.0;
+    let e85 = 15.0 * fpu_r / 100.0;
+    let e75 = 25.0 * fpu_r / 100.0;
+
+    let in_range = |err: f32| -> bool {
+        if fpu_r >= 0.0 {
+            fpu_r - err <= fpga_r && fpga_r <= fpu_r + err
+        } else {
+            fpu_r + err <= fpga_r && fpga_r <= fpu_r - err
+        }
+    };
+
+    if !in_range(e95) && r_state != State::NaN {
+        *fail_counter95 += 1;
+    }
+    if !in_range(e90) && r_state != State::NaN {
+        *fail_counter90 += 1;
+    }
+    if !in_range(e85) && r_state != State::NaN {
+        *fail_counter85 += 1;
+    }
+    if !in_range(e75) && r_state != State::NaN {
+        *fail_counter75 += 1;
+    }
+}
+
+fn bencher2(
     a: u8,
     b: u8,
     i_res: u8,
@@ -50,6 +93,78 @@ fn bencher(
     }
 }
 
+fn bencher3(
+    a: u8,
+    b: u8,
+    c: u8,
+    i_res: u8,
+    f: fn(f32, f32, f32) -> f32,
+    fail_counter95: &mut u32,
+    fail_counter90: &mut u32,
+    fail_counter85: &mut u32,
+    fail_counter75: &mut u32
+) {
+    let a = Fp8::from(a).into();
+    let b = Fp8::from(b).into();
+    let c = Fp8::from(c).into();
+    let fpga_r = Fp8::from(i_res).into();
+
+    let r_state = State::get(&Fp8::from(i_res));
+
+    let fpu_r = f(a, b, c);
+
+    let e95 = 5.0 * fpu_r / 100.0;
+    let e90 = 10.0 * fpu_r / 100.0;
+    let e85 = 15.0 * fpu_r / 100.0;
+    let e75 = 25.0 * fpu_r / 100.0;
+
+    let in_range = |err: f32| -> bool {
+        if fpu_r >= 0.0 {
+            fpu_r - err <= fpga_r && fpga_r <= fpu_r + err
+        } else {
+            fpu_r + err <= fpga_r && fpga_r <= fpu_r - err
+        }
+    };
+
+    if !in_range(e95) && r_state != State::NaN {
+        *fail_counter95 += 1;
+    }
+    if !in_range(e90) && r_state != State::NaN {
+        *fail_counter90 += 1;
+    }
+    if !in_range(e85) && r_state != State::NaN {
+        *fail_counter85 += 1;
+    }
+    if !in_range(e75) && r_state != State::NaN {
+        *fail_counter75 += 1;
+    }
+}
+
+fn print_stats(
+    argcount: i32,
+    fail_counter95: u32,
+    fail_counter90: u32,
+    fail_counter85: u32,
+    fail_counter75: u32
+) {
+    println!(
+        "Atleast 95% Accuracy: {:.2}% test cases.",
+        (f32::powi(256.0, argcount) - fail_counter95 as f32) / (f32::powi(256.0, argcount) / 100.0)
+    );
+    println!(
+        "Atleast 90% Accuracy: {:.2}% test cases.",
+        (f32::powi(256.0, argcount) - fail_counter90 as f32) / (f32::powi(256.0, argcount) / 100.0)
+    );
+    println!(
+        "Atleast 85% Accuracy: {:.2}% test cases.",
+        (f32::powi(256.0, argcount) - fail_counter85 as f32) / (f32::powi(256.0, argcount) / 100.0)
+    );
+    println!(
+        "Atleast 75% Accuracy: {:.2}% test cases.",
+        (f32::powi(256.0, argcount) - fail_counter75 as f32) / (f32::powi(256.0, argcount) / 100.0)
+    );
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -57,7 +172,7 @@ fn main() {
         eprintln!(
             "Usage: cargo accu-check <mode> <operator>\n\n \
             <mode> is either soft or fpga\n \
-            <operator> is add or sub or mul or div\n\n\
+            <operator> is add or sub or mul or div or inv or idiv or fma\n\n\
             The arguments MUST STRICTLY follow this order!"
         );
         std::process::exit(1);
@@ -67,7 +182,9 @@ fn main() {
         format!("dumps/{}_{}.csv", &args[1], &args[2])
     ).unwrap_or_else(|_| {
         if &args[2] != "add" && &args[2] != "sub" &&
-            &args[2] != "mul" && &args[2] != "div" {
+            &args[2] != "mul" && &args[2] != "div" &&
+            &args[2] != "inv" && &args[2] != "idiv" &&
+            &args[2] != "fma" {
             eprintln!(
                 "Unsupported operator: `{}`!",
                 &args[2]
@@ -85,8 +202,7 @@ fn main() {
     let mut fail_counter85: u32 = 0;
     let mut fail_counter75: u32 = 0;
 
-    for (line_num, line) in
-        BufReader::new(file).lines().enumerate() {
+    for (line_num, line) in BufReader::new(file).lines().enumerate() {
         let line = line.unwrap_or_else(|e| {
             eprintln!("Error reading line {}: {}", line_num + 1, e);
             std::process::exit(1);
@@ -105,8 +221,28 @@ fn main() {
             }))
             .collect();
 
-        if args[2] == "add" {
-            bencher(
+        if args[2] == "inv" {
+            bencher1(
+                numbers[0],
+                numbers[1],
+                |a_f| 1.0 / a_f,
+                &mut fail_counter95,
+                &mut fail_counter90,
+                &mut fail_counter85,
+                &mut fail_counter75
+            );
+        } else if args[2] == "idiv" {
+            bencher1(
+                numbers[0],
+                numbers[1],
+                |a_f| 1.0 / a_f,
+                &mut fail_counter95,
+                &mut fail_counter90,
+                &mut fail_counter85,
+                &mut fail_counter75
+            );
+        } else if args[2] == "add" {
+            bencher2(
                 numbers[0],
                 numbers[1],
                 numbers[2],
@@ -117,7 +253,7 @@ fn main() {
                 &mut fail_counter75
             );
         } else if args[2] == "sub" {
-            bencher(
+            bencher2(
                 numbers[0],
                 numbers[1],
                 numbers[2],
@@ -128,7 +264,7 @@ fn main() {
                 &mut fail_counter75
             );
         } else if args[2] == "mul" {
-            bencher(
+            bencher2(
                 numbers[0],
                 numbers[1],
                 numbers[2],
@@ -139,11 +275,23 @@ fn main() {
                 &mut fail_counter75
             );
         } else if args[2] == "div" {
-            bencher(
+            bencher2(
                 numbers[0],
                 numbers[1],
                 numbers[2],
                 |a_f, b_f| a_f / b_f,
+                &mut fail_counter95,
+                &mut fail_counter90,
+                &mut fail_counter85,
+                &mut fail_counter75
+            );
+        } else if args[2] == "fma" {
+            bencher3(
+                numbers[0],
+                numbers[1],
+                numbers[2],
+                numbers[3],
+                |a_f, b_f, c_f| a_f * b_f + c_f,
                 &mut fail_counter95,
                 &mut fail_counter90,
                 &mut fail_counter85,
@@ -162,21 +310,33 @@ fn main() {
     );
 
     println!("Test results for the {} operation (mode = {}):\n", &args[2], &args[1]);
-    println!(
-        "Atleast 95% Accuracy: {:.2}% test cases.",
-        (65536.0 - fail_counter95 as f32) / 655.360
-    );
-    println!(
-        "Atleast 90% Accuracy: {:.2}% test cases.",
-        (65536.0 - fail_counter90 as f32) / 655.360
-    );
-    println!(
-        "Atleast 85% Accuracy: {:.2}% test cases.",
-        (65536.0 - fail_counter85 as f32) / 655.360
-    );
-    println!(
-        "Atleast 75% Accuracy: {:.2}% test cases.",
-        (65536.0 - fail_counter75 as f32) / 655.360
-    );
+
+    if &args[2] == "inv" || &args[2] == "idiv" {
+        print_stats(
+            1,
+            fail_counter95,
+            fail_counter90,
+            fail_counter85,
+            fail_counter75
+        );
+    } else if &args[2] == "add" || &args[2] == "sub" ||
+        &args[2] == "mul" || &args[2] == "div" {
+        print_stats(
+            2,
+            fail_counter95,
+            fail_counter90,
+            fail_counter85,
+            fail_counter75
+        );
+    } else if &args[2] == "fma" {
+        print_stats(
+            3,
+            fail_counter95,
+            fail_counter90,
+            fail_counter85,
+            fail_counter75
+        );
+    }
+
     println!("-----")
 }

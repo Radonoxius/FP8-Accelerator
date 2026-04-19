@@ -3,31 +3,31 @@ use std::ops;
 use crate::{Fp8, state::State};
 
 ///Returns 1 / n.
-pub fn fast_inverse(n: &Fp8) -> Fp8 {
+pub fn fast_inverse(n: &Fp8) -> (Fp8, State) {
     let one = Fp8::one();
     let n_state = State::get(n);
 
     if n.byte == 0b0_0111_000 ||
         n.byte == 0b1_0111_000 {
-        return one.xor_signed(&one, n);
+        return (one.xor_signed(&one, n), State::Normal);
     }
 
     //Ready to witness this Hell?
     if n_state == State::NaN {
-        return *n;
+        return (*n, State::NaN);
     } else if n_state == State::Zero {
-        return Fp8::nan().xor_signed(&one, n);
+        return (Fp8::nan().xor_signed(&one, n), State::NaN);
     } else if n_state == State::Subnormal {
         let result_sign = n.sign_bit();
         if n.mantissa_bits() == 1 {
-            return Fp8::new(result_sign, 15, 6)
+            return (Fp8::new(result_sign, 15, 6), State::Normal)
         }
         let recip_bits = 128 - (
             (n.mantissa_bits() << 2) -
             (n.mantissa_bits() >> 2)
         ) - if n.mantissa_bits() > 4 { 0 } else { 1 };
 
-        Fp8 { byte: recip_bits | result_sign << 7 }
+        (Fp8 { byte: recip_bits | result_sign << 7 }, State::Normal)
     } else {
         let result_sign = n.sign_bit();
         let recip_bits;
@@ -42,32 +42,17 @@ pub fn fast_inverse(n: &Fp8) -> Fp8 {
             (n.mantissa_bits() >> 2);
         }
 
-        Fp8 { byte: recip_bits | result_sign << 7 }
+        if (n.byte & 0b01111111) < 105 {
+            (Fp8 { byte: recip_bits | result_sign << 7 }, State::Normal)
+        } else {
+            (Fp8 { byte: recip_bits | result_sign << 7 }, State::Subnormal)
+        }
     }
 }
 
-pub fn inverse(n: &Fp8) -> Fp8 {
-    let one = Fp8::one();
-    let n_state = State::get(n);
-
-    if n.byte == 0b0_0111_000 ||
-        n.byte == 0b1_0111_000 {
-        return one.xor_signed(&one, n);
-    }
-
-    if n_state == State::NaN {
-        return *n;
-    } else if n_state == State::Zero {
-        return Fp8::nan().xor_signed(&one, n);
-    } else {
-        let _result_sign = n.sign_bit();
-        let _recip_bits: u8 =
-            (u16::MAX / n.mantissa_value().unwrap() as u16) as u8;
-
-        let _result_exp = (8 - n.exponent_value().unwrap()) as u8;
-
-        todo!()
-    }
+///Returns 1 / n, using regular divide instead.
+pub fn inverse_divide(n: &Fp8) -> (Fp8, State) {
+    divide(&Fp8::one(), n)
 }
 
 ///Returns a / b and the state of the result.
