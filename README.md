@@ -12,7 +12,7 @@ This project is only compatible with the DE1-SoC board.
 
 Basically, we configure the FPGA as the accelerator and send data to it
 from the Cortex-A9 CPU. The FPGA processes it and returns the processed data back to the CPU
-via the AXI/Lite Bus.
+via the AXI Bus.
 
 ## Members
 Nimesh R Acharya _aka Radonoxius_ : 241EC137,
