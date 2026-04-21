@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use soft_fp8::{addition::add, subtraction::subtract};
+use soft_fp8::{subtraction::subtract};
 use vfp8_driver::{U128, Vfp8Accelerator, Vfp8Operation};
 use vfp8_runner::fill_randoms;
 
@@ -38,7 +38,9 @@ fn main() {
     let t2 = t1.elapsed();
     println!("Soft Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}\n", rx[200]);
+    println!("\n{:?}", rx[199]);
+    println!("{:?}", rx[200]);
+    println!("{:?}\n", rx[201]);
 
 
     let mut device = Vfp8Accelerator::take().unwrap();
@@ -61,5 +63,6 @@ fn main() {
     let t2 = t1.elapsed();
     println!("Hard Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}\n", rx[200]);
+    println!("\n{:?}", rx[200]);
+    println!("{:?}\n", rx[201]);
 }

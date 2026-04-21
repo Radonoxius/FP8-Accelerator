@@ -35,47 +35,47 @@ impl Vfp8Accelerator {
         }
     }
 
-    #[inline(always)]
-    pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
-        unsafe {
-            if offset <= SPAN {
-                write_volatile(
-                    (self.base_addr as usize + offset) as *mut U128,
-                    value,
-                );
-
-                Ok(())
-            } else {
-                Err(DriverError::OutOfBounds)
-            }
-        }
-    }
-
+    //#[inline(always)]
     //pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
-    //    if offset > SPAN {
-    //        return Err(DriverError::OutOfBounds);
-    //    }
-    //
-    //    let addr = (self.base_addr as usize + offset) as *mut u32;
-    //
-    //    // Destructure the 128-bit value into 32-bit chunks for the registers.
-    //    // If U128 is a [u32; 4], you can access it directly. 
-    //    // If it's a u128, use transmute.
-    //    let [w0, w1, w2, w3] = unsafe { core::mem::transmute::<U128, [u32; 4]>(value) };
-    //
     //    unsafe {
-    //        core::arch::asm!(
-    //            "stm {addr}, {{r0, r1, r2, r3}}", // Burst write 128 bits
-    //            "dsb sy",               // Ensure the write hits the bridge before continuing
-    //            addr = in(reg) addr,
-    //            in("r0") w0,
-    //            in("r1") w1,
-    //            in("r2") w2,
-    //            in("r3") w3,
-    //            options(nostack, preserves_flags),
-    //        );
+    //        if offset <= SPAN {
+    //            write_volatile(
+    //                (self.base_addr as usize + offset) as *mut U128,
+    //                value,
+    //            );
+//
+    //            Ok(())
+    //        } else {
+    //            Err(DriverError::OutOfBounds)
+    //        }
     //    }
-    //
-    //    Ok(())
     //}
+
+    pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
+        if offset > SPAN {
+            return Err(DriverError::OutOfBounds);
+        }
+    
+        let addr = (self.base_addr as usize + offset) as *mut u32;
+    
+        // Destructure the 128-bit value into 32-bit chunks for the registers.
+        // If U128 is a [u32; 4], you can access it directly. 
+        // If it's a u128, use transmute.
+        let [w0, w1, w2, w3] = unsafe { core::mem::transmute::<U128, [u32; 4]>(value) };
+    
+        unsafe {
+            core::arch::asm!(
+                "stm {addr}, {{r0, r1, r2, r3}}", // Burst write 128 bits
+                "dsb sy",               // Ensure the write hits the bridge before continuing
+                addr = in(reg) addr,
+                in("r0") w0,
+                in("r1") w1,
+                in("r2") w2,
+                in("r3") w3,
+                options(nostack, preserves_flags),
+            );
+        }
+    
+        Ok(())
+    }
 }
