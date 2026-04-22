@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="system" kind="system" version="1.0" fabric="QSYS">
  <!-- Format version 25.1 1129 (Future versions may contain additional information.) -->
- <!-- 2026.04.21.16:14:25 -->
+ <!-- 2026.04.22.16:10:27 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1776768261</value>
+  <value>1776854423</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -332,9 +332,9 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>vfp8_controller</moduleName>
+    <moduleName>vfp8_controller_0</moduleName>
     <slaveName>clock</slaveName>
-    <name>vfp8_controller.clock</name>
+    <name>vfp8_controller_0.clock</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
@@ -16131,11 +16131,11 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>vfp8_controller</moduleName>
-    <slaveName>trx_interface</slaveName>
-    <name>vfp8_controller.trx_interface</name>
+    <moduleName>vfp8_controller_0</moduleName>
+    <slaveName>vfp8_unit</slaveName>
+    <name>vfp8_controller_0.vfp8_unit</name>
     <baseAddress>0</baseAddress>
-    <span>16</span>
+    <span>256</span>
    </memoryBlock>
   </interface>
   <interface name="f2h_axi_clock" kind="clock_sink" version="25.1">
@@ -42429,11 +42429,11 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>vfp8_controller</moduleName>
-    <slaveName>trx_interface</slaveName>
-    <name>vfp8_controller.trx_interface</name>
+    <moduleName>vfp8_controller_0</moduleName>
+    <slaveName>vfp8_unit</slaveName>
+    <name>vfp8_controller_0.vfp8_unit</name>
     <baseAddress>0</baseAddress>
-    <span>16</span>
+    <span>256</span>
    </memoryBlock>
   </interface>
   <interface name="f2h_axi_clock" kind="clock_sink" version="25.1">
@@ -44344,11 +44344,11 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>vfp8_controller</moduleName>
-    <slaveName>trx_interface</slaveName>
-    <name>vfp8_controller.trx_interface</name>
+    <moduleName>vfp8_controller_0</moduleName>
+    <slaveName>vfp8_unit</slaveName>
+    <name>vfp8_controller_0.vfp8_unit</name>
     <baseAddress>3221225472</baseAddress>
-    <span>16</span>
+    <span>256</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
@@ -45167,11 +45167,11 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>vfp8_controller</moduleName>
-    <slaveName>trx_interface</slaveName>
-    <name>vfp8_controller.trx_interface</name>
+    <moduleName>vfp8_controller_0</moduleName>
+    <slaveName>vfp8_unit</slaveName>
+    <name>vfp8_controller_0.vfp8_unit</name>
     <baseAddress>3221225472</baseAddress>
-    <span>16</span>
+    <span>256</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
@@ -72769,10 +72769,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="vfp8_controller"
+   name="vfp8_controller_0"
    kind="vfp8_controller"
    version="1.0"
-   path="vfp8_controller">
+   path="vfp8_controller_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <parameter name="deviceFamily">
@@ -72881,7 +72881,7 @@ parameters are a RESULT of the module parameters. -->
     <role>clk</role>
    </port>
   </interface>
-  <interface name="trx_interface" kind="avalon_slave" version="25.1">
+  <interface name="vfp8_unit" kind="avalon_slave" version="25.1">
    <!-- The connection points exposed by a module instance for the
 particular module parameters. Connection points and their
 parameters are a RESULT of the module parameters. -->
@@ -72919,7 +72919,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>16</value>
+    <value>256</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -72927,7 +72927,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressUnits">
     <type>com.altera.sopcmodel.avalon.EAddrBurstUnits</type>
-    <value>WORDS</value>
+    <value>SYMBOLS</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -72991,7 +72991,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="burstcountUnits">
     <type>com.altera.sopcmodel.avalon.EAddrBurstUnits</type>
-    <value>WORDS</value>
+    <value>SYMBOLS</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -73111,7 +73111,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="readWaitStates">
     <type>int</type>
-    <value>1</value>
+    <value>0</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -73119,7 +73119,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="readWaitTime">
     <type>int</type>
-    <value>1</value>
+    <value>0</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -73183,7 +73183,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="writeWaitStates">
     <type>int</type>
-    <value>0</value>
+    <value>1</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -73191,7 +73191,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="writeWaitTime">
     <type>int</type>
-    <value>0</value>
+    <value>1</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -73226,6 +73226,12 @@ parameters are a RESULT of the module parameters. -->
     <direction>Input</direction>
     <width>128</width>
     <role>writedata</role>
+   </port>
+   <port>
+    <name>address</name>
+    <direction>Input</direction>
+    <width>8</width>
+    <role>address</role>
    </port>
    <port>
     <name>read</name>
@@ -83266,11 +83272,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>axi_slave0</endConnectionPoint>
  </connection>
  <connection
-   name="hps_0_bridges.h2f/vfp8_controller.trx_interface"
+   name="hps_0_bridges.h2f/vfp8_controller_0.vfp8_unit"
    kind="avalon"
    version="25.1"
    start="hps_0_bridges.h2f"
-   end="vfp8_controller.trx_interface">
+   end="vfp8_controller_0.vfp8_unit">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -83313,15 +83319,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>hps_0_bridges</startModule>
   <startConnectionPoint>h2f</startConnectionPoint>
-  <endModule>vfp8_controller</endModule>
-  <endConnectionPoint>trx_interface</endConnectionPoint>
+  <endModule>vfp8_controller_0</endModule>
+  <endConnectionPoint>vfp8_unit</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/vfp8_controller.clock"
+   name="clk_0.clk/vfp8_controller_0.clock"
    kind="clock"
    version="25.1"
    start="clk_0.clk"
-   end="vfp8_controller.clock">
+   end="vfp8_controller_0.clock">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -83340,7 +83346,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>vfp8_controller</endModule>
+  <endModule>vfp8_controller_0</endModule>
   <endConnectionPoint>clock</endConnectionPoint>
  </connection>
  <connection
@@ -83425,11 +83431,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>h2f_axi_clock</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/vfp8_controller.reset"
+   name="clk_0.clk_reset/vfp8_controller_0.reset"
    kind="reset"
    version="25.1"
    start="clk_0.clk_reset"
-   end="vfp8_controller.reset">
+   end="vfp8_controller_0.reset">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -83448,7 +83454,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>vfp8_controller</endModule>
+  <endModule>vfp8_controller_0</endModule>
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection
@@ -83479,11 +83485,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clk_in_reset</endConnectionPoint>
  </connection>
  <connection
-   name="hps_0_bridges.h2f_reset/vfp8_controller.reset"
+   name="hps_0_bridges.h2f_reset/vfp8_controller_0.reset"
    kind="reset"
    version="25.1"
    start="hps_0_bridges.h2f_reset"
-   end="vfp8_controller.reset">
+   end="vfp8_controller_0.reset">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -83502,7 +83508,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>hps_0_bridges</startModule>
   <startConnectionPoint>h2f_reset</startConnectionPoint>
-  <endModule>vfp8_controller</endModule>
+  <endModule>vfp8_controller_0</endModule>
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <plugin>

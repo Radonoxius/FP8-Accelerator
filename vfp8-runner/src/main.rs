@@ -23,7 +23,7 @@ fn main() {
                 subtract(&ax[i][4].into(), &bx[i][4].into()).0.into(),
                 subtract(&ax[i][5].into(), &bx[i][5].into()).0.into(),
                 subtract(&ax[i][6].into(), &bx[i][6].into()).0.into(),
-                0.into(),
+                subtract(&ax[i][7].into(), &bx[i][7].into()).0.into(),
                 0.into(),
                 0.into(),
                 0.into(),
@@ -38,16 +38,16 @@ fn main() {
     let t2 = t1.elapsed();
     println!("Soft Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}", rx[199]);
-    println!("{:?}", rx[200]);
-    println!("{:?}\n", rx[201]);
+    println!("\n{:?}", rx[0]);
+    println!("{:?}", rx[1]);
+    println!("{:?}\n", rx[2]);
 
 
     let mut device = Vfp8Accelerator::take().unwrap();
 
     let t1 = Instant::now();
     for i in 0..rx.capacity() {
-        rx[i] = device.compute(
+        rx[i] = device.compute2(
             Vfp8Operation::Subtract,
             [
                 (ax[i][0].into(), bx[i][0].into()),
@@ -56,13 +56,15 @@ fn main() {
                 (ax[i][3].into(), bx[i][3].into()),
                 (ax[i][4].into(), bx[i][4].into()),
                 (ax[i][5].into(), bx[i][5].into()),
-                (ax[i][6].into(), bx[i][6].into())
+                (ax[i][6].into(), bx[i][6].into()),
+                (ax[i][7].into(), bx[i][7].into())
             ]
         ).unwrap().unwrap()
     }
     let t2 = t1.elapsed();
     println!("Hard Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}", rx[200]);
-    println!("{:?}\n", rx[201]);
+    println!("\n{:?}", rx[0]);
+    println!("{:?}", rx[1]);
+    println!("{:?}\n", rx[2]);
 }
