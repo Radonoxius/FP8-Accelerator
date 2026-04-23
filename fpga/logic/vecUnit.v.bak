@@ -58,12 +58,12 @@ module vecUnit (
     wire [7:0] a30 = bus[16 +: 8], b30 = bus[8 +: 8], c30 = bus[0 +: 8];
     wire [7:0] a31 = bus[16 +: 8], b31 = bus[8 +: 8], c31 = bus[0 +: 8];
 
-    opUnit3 u30(a30, b30, c30, r30, global_opcode);
-    opUnit3 u31(a31, b31, c31, r31, global_opcode);
+    opUnit3 u30(a30, b30, c30, global_opcode);
+    opUnit3 u31(a31, b31, c31, global_opcode);
 
 	always@(*) begin
-		casex(global_opcode)
-			3'b1xx: resx = {64'd0, r27, r26, r25, r24, r23, r22, r21, r20};
+		case(global_opcode)
+			3'b100, 3'b101, 3'b110, 3'b111: resx = {64'd0, r27, r26, r25, r24, r23, r22, r21, r20};
 			3'b001: resx = {r115, r114, r113, r112, r111, r110, r19, r18, r17, r16, r15, r14, r13, r12, r11, r10};
 			3'b010: resx = {112'd0, r31, r30};
 			default: resx = 128'd0;
