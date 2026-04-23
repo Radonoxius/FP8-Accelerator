@@ -14,7 +14,7 @@ version = "0.1.0"
 
 [[package]]
 name = "vfp8-driver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "libc",
  "soft-fp8",

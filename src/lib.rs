@@ -16,6 +16,7 @@ pub mod division;
 ///
 ///**NOTE**: No subnormal arithmetic support.
 #[derive(Clone, Copy)]
+#[repr(C)]
 pub struct Fp8 {
     pub(crate) byte: u8
 }

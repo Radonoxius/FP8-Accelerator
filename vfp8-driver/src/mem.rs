@@ -1,13 +1,11 @@
-use crate::{SPAN, U128, Vfp8Accelerator, errors::DriverError};
+use crate::{FpReg, Vfp8Accelerator};
 
 impl Vfp8Accelerator {
+    ///Reads the vfp8 register at the given offset
+    ///
+    ///Only works on `armv7-linux` target.
     #[inline(always)]
-    pub fn read_reg_at(&self, offset: usize) -> Result<U128, DriverError> {
-        if offset > SPAN {
-            return Err(DriverError::OutOfBounds);
-        }
-
-        // Ensure the address is at least 4-byte aligned (required for ldm)
+    pub(crate) unsafe fn read_from(&self, offset: usize) -> FpReg {
         let addr = (self.base_addr as usize + offset) as *const u32;
 
         let w0: u32;
@@ -27,18 +25,19 @@ impl Vfp8Accelerator {
                 options(nostack, preserves_flags)
             );
 
-            Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))
+            core::mem::transmute::<[u32; 4], FpReg>([w0, w1, w2, w3])
         }
     }
 
-    pub fn write_reg_at(&mut self, offset: usize, value: U128) -> Result<(), DriverError> {
-        if offset > SPAN {
-            return Err(DriverError::OutOfBounds);
-        }
-    
+    ///Writes to the vfp8 register at the given offset
+    /// 
+    ///Only works on `armv7-linux` target.
+    #[inline(always)]
+    pub(crate) unsafe fn write_to(&mut self, offset: usize, value: FpReg) {
         let addr = (self.base_addr as usize + offset) as *mut u32;
-        let [w0, w1, w2, w3] =
-            unsafe { core::mem::transmute::<U128, [u32; 4]>(value) };
+        let [w0, w1, w2, w3] = unsafe {
+            core::mem::transmute::<FpReg, [u32; 4]>(value)
+        };
     
         unsafe {
             core::arch::asm!(
@@ -49,10 +48,8 @@ impl Vfp8Accelerator {
                 in("r1") w1,
                 in("r2") w2,
                 in("r3") w3,
-                options(nostack, preserves_flags),
+                options(nostack, preserves_flags)
             );
         }
-    
-        Ok(())
     }
 }
