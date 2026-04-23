@@ -175,7 +175,7 @@ module system_mm_interconnect_0 (
 		.UAV_BYTEENABLE_W               (16),
 		.UAV_ADDRESS_W                  (30),
 		.UAV_BURSTCOUNT_W               (5),
-		.AV_READLATENCY                 (0),
+		.AV_READLATENCY                 (1),
 		.USE_READDATAVALID              (0),
 		.USE_WAITREQUEST                (0),
 		.USE_UAV_CLKEN                  (0),
@@ -189,7 +189,7 @@ module system_mm_interconnect_0 (
 		.AV_REQUIRE_UNALIGNED_ADDRESSES (0),
 		.CHIPSELECT_THROUGH_READLATENCY (0),
 		.AV_READ_WAIT_CYCLES            (0),
-		.AV_WRITE_WAIT_CYCLES           (1),
+		.AV_WRITE_WAIT_CYCLES           (0),
 		.AV_SETUP_WAIT_CYCLES           (0),
 		.AV_DATA_HOLD_CYCLES            (0)
 	) vfp8_controller_0_vfp8_unit_translator (

@@ -14,24 +14,24 @@ impl Vfp8Accelerator {
 
         let w0: u32;
         let w1: u32;
-        //let w2: u32;
-        //let w3: u32;
+        let w2: u32;
+        let w3: u32;
 
         unsafe {
             core::arch::asm!(
-                //"ldm {addr}, {{ r0, r1, r2, r3 }}",
-                "ldm {addr}, {{ r0, r1 }}",
+                "ldm {addr}, {{ r0, r1, r2, r3 }}",
+                //"ldm {addr}, {{ r0, r1 }}",
                 "dsb sy",
                 addr = in(reg) addr,
                 out("r0") w0,
                 out("r1") w1,
-                //out("r2") w2,
-                //out("r3") w3,
+                out("r2") w2,
+                out("r3") w3,
                 options(nostack, preserves_flags)
             );
 
-            //Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))
-            Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, 0, 0]))
+            Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))
+            //Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, 0, 0]))
         }
     }
 

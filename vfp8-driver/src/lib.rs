@@ -5,7 +5,7 @@ pub mod mem;
 pub mod ops;
 pub mod ffi;
 
-use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
+use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, MAP_SYNC, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
 use soft_fp8::Fp8;
 
 use crate::errors::DriverError;
@@ -50,7 +50,7 @@ impl Vfp8Accelerator {
                     null_mut(),
                     SPAN,
                     PROT_READ | PROT_WRITE,
-                    MAP_SHARED | MAP_POPULATE,
+                    MAP_SHARED | MAP_POPULATE | MAP_SYNC,
                     mem_fd,
                     (AXI_BRIDGE_BASE + BRIDGE_OFFSET) as i64
                 )
