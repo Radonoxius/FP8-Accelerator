@@ -10,17 +10,17 @@ module controller (
     reg [127:0] in_storage;
     reg [127:0] opcode;
 
-    wire [63:0] vec_results;
-    reg  [63:0] vec_results_r;
+    wire [127:0] vec_results;
+    reg  [127:0] vec_results_r;
 
-    vecUnit2 u(in_storage, opcode, vec_results);
+    vecUnit u(in_storage, opcode, vec_results);
 
     always @(posedge a_clk or negedge reset_n) begin
         if (!reset_n) begin
             in_storage    <= 128'd0;
             opcode        <= 128'd0;
             readdata      <= 128'd0;
-            vec_results_r <= 64'd0;
+            vec_results_r <= 128'd0;
         end
 
         else begin
