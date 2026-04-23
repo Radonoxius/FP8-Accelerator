@@ -19,6 +19,7 @@ const RESULT_REGISTER_OFFSET: usize = 0x20;
 
 pub type FpReg = [u8; 16];
 
+///Represents the vfp8 accelerator device
 #[derive(Debug)]
 #[repr(C)]
 pub struct Vfp8Accelerator {
@@ -27,6 +28,7 @@ pub struct Vfp8Accelerator {
 }
 
 impl Vfp8Accelerator {
+    ///Initialize the vfp8 accelerator and take ownership of it
     pub fn take<'a>() -> Result<Self, DriverError<'a>> {
         let path = c"/dev/mem".as_ptr();
         let mem_fd = unsafe { open(path, O_RDWR | O_SYNC) };
@@ -69,6 +71,8 @@ impl Drop for Vfp8Accelerator {
     }
 }
 
+///Represents the arithmetic operator used in mathematical expressions,
+///that are supported by the vfp8 accelerator
 #[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub enum Vfp8Operator {

@@ -2,12 +2,11 @@ use std::{error::Error, fmt::{Debug, Display}};
 
 use crate::Vfp8Operator;
 
+///Represents a driver error that can occur during vfp8 accelerator operations.
 #[derive(Debug)]
 pub enum DriverError<'a> {
     MemFdError,
     MmapError,
-
-    OutOfBounds,
 
     InvalidExpressionOperator(Vfp8Operator, &'a str)
 }
@@ -23,11 +22,6 @@ impl<'a> Display for DriverError<'a> {
             Self::MmapError =>
                 f.write_str(
                     "An error occured while obtaining virtual address of the bus. Try running the program as root."
-                ),
-
-            Self::OutOfBounds =>
-                f.write_str(
-                    "The memory offset for read/write is out of bounds! 0xFF is the maximum offset!"
                 ),
 
             Self::InvalidExpressionOperator(op, s) =>

@@ -217,6 +217,7 @@ unsafe impl Vfp8Expression for TripleOperandExpr {
 }
 
 impl Vfp8Accelerator {
+    ///Dispatches the expression to the vfp8 accelerator, evaluates it and returns the result.
     #[allow(private_bounds)]
     pub fn compute(&mut self, expr: &impl Vfp8Expression) -> Option<FpReg> {
         unsafe {

@@ -21,6 +21,18 @@ typedef struct Vfp8Accelerator {
     int32_t mem_fd;
 } Vfp8Accelerator;
 
+//Represents the arithmetic operators supported by vfp8 accelerator
+typedef enum Vfp8Operator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Inverse,
+    Fma,
+
+    Idle
+} Vfp8Operator;
+
 
 //Initializes the Accelerator
 //
