@@ -1,8 +1,8 @@
 use std::{fs::OpenOptions, io::Read};
 
-use vfp8_driver::U128;
+use vfp8_driver::FpReg;
 
-pub fn generate_randoms() -> U128 {
+pub fn generate_randoms() -> FpReg {
     let mut r = [0; 16];
 
     let mut urandom_file = OpenOptions::new().read(true).open("/dev/urandom").unwrap();
@@ -11,7 +11,7 @@ pub fn generate_randoms() -> U128 {
     r
 }
 
-pub fn fill_randoms(vec: &mut Vec<U128>) {
+pub fn fill_randoms(vec: &mut Vec<FpReg>) {
     for _ in 0..vec.capacity() {
         vec.push(generate_randoms());
     }

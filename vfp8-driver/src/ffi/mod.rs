@@ -1,8 +1,8 @@
 use std::{ffi::c_void, ptr::null_mut};
 
-use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
+use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, MAP_SYNC, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
 
-use crate::{BRIDGE_OFFSET, AXI_BRIDGE_BASE, SPAN, Vfp8Accelerator};
+use crate::{DEVICE_OFFSET, AXI_BRIDGE_BASE, DEVICE_SPAN, Vfp8Accelerator};
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn init() -> Vfp8Accelerator {
@@ -18,11 +18,11 @@ pub unsafe extern "C" fn init() -> Vfp8Accelerator {
         let v_addr = unsafe {
             mmap(
                 null_mut(),
-                SPAN,
+                DEVICE_SPAN,
                 PROT_READ | PROT_WRITE,
-                MAP_SHARED | MAP_POPULATE,
+                MAP_SHARED | MAP_POPULATE | MAP_SYNC,
                 mem_fd,
-                (AXI_BRIDGE_BASE + BRIDGE_OFFSET) as i64
+                (AXI_BRIDGE_BASE + DEVICE_OFFSET) as i64
             )
         };
 
@@ -46,7 +46,7 @@ pub unsafe extern "C" fn init() -> Vfp8Accelerator {
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn destroy(device: Vfp8Accelerator) {
     unsafe {
-        munmap(device.base_addr as *mut c_void, SPAN);
+        munmap(device.base_addr as *mut c_void, DEVICE_SPAN);
         close(device.mem_fd);
     }
 }

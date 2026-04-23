@@ -1,14 +1,18 @@
 use std::{error::Error, fmt::{Debug, Display}};
 
+use crate::Vfp8Operator;
+
 #[derive(Debug)]
-pub enum DriverError {
+pub enum DriverError<'a> {
     MemFdError,
     MmapError,
 
-    OutOfBounds
+    OutOfBounds,
+
+    InvalidExpressionOperator(Vfp8Operator, &'a str)
 }
 
-impl Display for DriverError {
+impl<'a> Display for DriverError<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         return match self {
             Self::MemFdError =>
@@ -23,13 +27,16 @@ impl Display for DriverError {
 
             Self::OutOfBounds =>
                 f.write_str(
-                    "The memory offset for read/write is out of bounds! 0x1000 is the maximum offset!"
-                )
+                    "The memory offset for read/write is out of bounds! 0xFF is the maximum offset!"
+                ),
+
+            Self::InvalidExpressionOperator(op, s) =>
+                write!(f, "{:?} is incompatible with {} expression!", op, s)
         }
     }
 }
 
-impl Error for DriverError {
+impl<'a> Error for DriverError<'a> {
     fn cause(&self) -> Option<&dyn Error> {
         Some(self)
     }
