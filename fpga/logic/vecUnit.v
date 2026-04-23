@@ -56,7 +56,7 @@ module vecUnit (
     wire [7:0] r30, r31;
 
     wire [7:0] a30 = bus[16 +: 8], b30 = bus[8 +: 8], c30 = bus[0 +: 8];
-    wire [7:0] a31 = bus[16 +: 8], b31 = bus[8 +: 8], c31 = bus[0 +: 8];
+    wire [7:0] a31 = bus[40 +: 8], b31 = bus[32 +: 8], c31 = bus[24 +: 8];
 
     opUnit3 u30(a30, b30, c30, r30, global_opcode);
     opUnit3 u31(a31, b31, c31, r31, global_opcode);
