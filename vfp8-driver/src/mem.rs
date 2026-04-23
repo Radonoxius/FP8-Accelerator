@@ -1,5 +1,3 @@
-use std::ptr::write_volatile;
-
 use crate::{SPAN, U128, Vfp8Accelerator, errors::DriverError};
 
 impl Vfp8Accelerator {
@@ -14,24 +12,22 @@ impl Vfp8Accelerator {
 
         let w0: u32;
         let w1: u32;
-        //let w2: u32;
-        //let w3: u32;
+        let w2: u32;
+        let w3: u32;
 
         unsafe {
             core::arch::asm!(
-                //"ldm {addr}, {{ r0, r1, r2, r3 }}",
-                "ldm {addr}, {{ r0, r1 }}",
+                "ldm {addr}, {{ r0, r1, r2, r3 }}",
                 "dsb sy",
                 addr = in(reg) addr,
                 out("r0") w0,
                 out("r1") w1,
-                //out("r2") w2,
-                //out("r3") w3,
+                out("r2") w2,
+                out("r3") w3,
                 options(nostack, preserves_flags)
             );
 
-            //Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))
-            Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, 0, 0]))
+            Ok(core::mem::transmute::<[u32; 4], U128>([w0, w1, w2, w3]))
         }
     }
 
@@ -41,16 +37,13 @@ impl Vfp8Accelerator {
         }
     
         let addr = (self.base_addr as usize + offset) as *mut u32;
-    
-        // Destructure the 128-bit value into 32-bit chunks for the registers.
-        // If U128 is a [u32; 4], you can access it directly. 
-        // If it's a u128, use transmute.
-        let [w0, w1, w2, w3] = unsafe { core::mem::transmute::<U128, [u32; 4]>(value) };
+        let [w0, w1, w2, w3] =
+            unsafe { core::mem::transmute::<U128, [u32; 4]>(value) };
     
         unsafe {
             core::arch::asm!(
-                "stm {addr}, {{r0, r1, r2, r3}}", // Burst write 128 bits
-                "dsb sy",               // Ensure the write hits the bridge before continuing
+                "stm {addr}, {{r0, r1, r2, r3}}",
+                "dsb sy",
                 addr = in(reg) addr,
                 in("r0") w0,
                 in("r1") w1,

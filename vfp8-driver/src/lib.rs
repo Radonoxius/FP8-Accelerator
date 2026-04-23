@@ -13,6 +13,10 @@ use crate::errors::DriverError;
 const AXI_BRIDGE_BASE: usize = 0xC000_0000;
 const BRIDGE_OFFSET: usize = 0;
 
+const OPERAND_REGISTER_OFFSET: usize = 0x00;
+const OPCODE_REGISTER_OFFSET: usize = 0x10;
+const RESULT_REGISTER_OFFSET: usize = 0x20;
+
 const SPAN: usize = 0x1000;
 
 pub type U128 = [u8; 16];
@@ -24,13 +28,15 @@ pub struct Vfp8Accelerator {
     mem_fd: i32
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub enum Vfp8Operation {
     Add,
     Subtract,
     Multiply,
     Divide,
+    Inverse,
+    Fma,
 
     Halt
 }
@@ -87,6 +93,8 @@ impl Into<u8> for Vfp8Operation {
             Self::Subtract => 0b101_00000,
             Self::Multiply => 0b110_00000,
             Self::Divide => 0b111_00000,
+            Self::Inverse => 0b001_00000,
+            Self::Fma => 0b010_00000,
 
             Self::Halt => 0b000_00000
         }

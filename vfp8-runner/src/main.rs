@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use soft_fp8::{subtraction::subtract};
+use soft_fp8::{multiplication::multiply};
 use vfp8_driver::{U128, Vfp8Accelerator, Vfp8Operation};
 use vfp8_runner::fill_randoms;
 
@@ -16,14 +16,14 @@ fn main() {
     for i in 0..rx.capacity() {
         rx.push(
             [
-                subtract(&ax[i][0].into(), &bx[i][0].into()).0.into(),
-                subtract(&ax[i][1].into(), &bx[i][1].into()).0.into(),
-                subtract(&ax[i][2].into(), &bx[i][2].into()).0.into(),
-                subtract(&ax[i][3].into(), &bx[i][3].into()).0.into(),
-                subtract(&ax[i][4].into(), &bx[i][4].into()).0.into(),
-                subtract(&ax[i][5].into(), &bx[i][5].into()).0.into(),
-                subtract(&ax[i][6].into(), &bx[i][6].into()).0.into(),
-                subtract(&ax[i][7].into(), &bx[i][7].into()).0.into(),
+                multiply(&ax[i][0].into(), &bx[i][0].into()).0.into(),
+                multiply(&ax[i][1].into(), &bx[i][1].into()).0.into(),
+                multiply(&ax[i][2].into(), &bx[i][2].into()).0.into(),
+                multiply(&ax[i][3].into(), &bx[i][3].into()).0.into(),
+                multiply(&ax[i][4].into(), &bx[i][4].into()).0.into(),
+                multiply(&ax[i][5].into(), &bx[i][5].into()).0.into(),
+                multiply(&ax[i][6].into(), &bx[i][6].into()).0.into(),
+                multiply(&ax[i][7].into(), &bx[i][7].into()).0.into(),
                 0.into(),
                 0.into(),
                 0.into(),
@@ -48,7 +48,7 @@ fn main() {
     let t1 = Instant::now();
     for i in 0..rx.capacity() {
         rx[i] = device.compute2(
-            Vfp8Operation::Subtract,
+            Vfp8Operation::Multiply,
             [
                 (ax[i][0].into(), bx[i][0].into()),
                 (ax[i][1].into(), bx[i][1].into()),
