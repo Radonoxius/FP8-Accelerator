@@ -49,7 +49,7 @@ If you want to use this project in your work, check the Releases page instead.
 To build Rust code, you require
 + `clang` and `lld`
 + `rustc` (v1.85+, Rust edition 2024) and `cargo`
-+ `armv7-unknown-linux-musleabifh` rust target
++ `armv7-unknown-linux-musleabihf` rust target
 
 Bash and Linux is optional, but nice to have.
 
