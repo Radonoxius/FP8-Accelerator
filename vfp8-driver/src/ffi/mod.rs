@@ -1,8 +1,31 @@
 use std::{ffi::c_void, ptr::null_mut};
 
 use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, MAP_SYNC, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
+use soft_fp8::Fp8;
 
 use crate::{DEVICE_OFFSET, AXI_BRIDGE_BASE, DEVICE_SPAN, Vfp8Accelerator};
+
+pub mod ops;
+
+#[repr(C)]
+pub struct ComputeResult {
+    pub(crate) res0: Fp8,
+    pub(crate) res1: Fp8,
+    pub(crate) res2: Fp8,
+    pub(crate) res3: Fp8,
+    pub(crate) res4: Fp8,
+    pub(crate) res5: Fp8,
+    pub(crate) res6: Fp8,
+    pub(crate) res7: Fp8,
+    pub(crate) res8: Fp8,
+    pub(crate) res9: Fp8,
+    pub(crate) res10: Fp8,
+    pub(crate) res11: Fp8,
+    pub(crate) res12: Fp8,
+    pub(crate) res13: Fp8,
+    pub(crate) res14: Fp8,
+    pub(crate) res15: Fp8
+}
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn init() -> Vfp8Accelerator {

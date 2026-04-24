@@ -2,7 +2,7 @@ use soft_fp8::Fp8;
 
 use crate::{OPCODE_REGISTER, OPERAND_REGISTER, RESULT_REGISTER, FpReg, Vfp8Accelerator, Vfp8Operator, errors::DriverError};
 
-static mut OPCODE_CACHE: Vfp8Operator = Vfp8Operator::Idle;
+pub(crate) static mut OPCODE_CACHE: Vfp8Operator = Vfp8Operator::Idle;
 
 ///Represents a floating point arithmetic expression that can be computed by the accelerator.
 ///

@@ -3,7 +3,7 @@ use crate::{FpReg, Vfp8Accelerator};
 impl Vfp8Accelerator {
     ///Reads the vfp8 register at the given offset
     ///
-    ///Only works on `armv7-linux` target.
+    ///Only works on `armv7-linux-musleabihf` target.
     #[inline(always)]
     pub(crate) unsafe fn read_from(&self, offset: usize) -> FpReg {
         let addr = (self.base_addr as usize + offset) as *const u32;
@@ -31,7 +31,7 @@ impl Vfp8Accelerator {
 
     ///Writes to the vfp8 register at the given offset
     /// 
-    ///Only works on `armv7-linux` target.
+    ///Only works on `armv7-linux-musleabihf` target.
     #[inline(always)]
     pub(crate) unsafe fn write_to(&mut self, offset: usize, value: FpReg) {
         let addr = (self.base_addr as usize + offset) as *mut u32;
