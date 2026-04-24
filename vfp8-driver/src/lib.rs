@@ -81,7 +81,6 @@ pub enum Vfp8Operator {
     Multiply,
     Divide,
     Inverse,
-    Fma,
 
     Idle
 }
@@ -95,8 +94,6 @@ impl Into<u8> for Vfp8Operator {
             Self::Divide => 0b111_00000,
 
             Self::Inverse => 0b001_00000,
-
-            Self::Fma => 0b010_00000,
 
             Self::Idle => 0b000_00000
         }
