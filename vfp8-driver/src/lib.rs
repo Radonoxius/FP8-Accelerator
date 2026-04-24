@@ -13,9 +13,9 @@ const AXI_BRIDGE_BASE: usize = 0xC000_0000;
 const DEVICE_OFFSET: usize = 0x00;
 const DEVICE_SPAN: usize = 0xFF;
 
-const OPERAND_REGISTER_OFFSET: usize = 0x00;
-const OPCODE_REGISTER_OFFSET: usize = 0x10;
-const RESULT_REGISTER_OFFSET: usize = 0x20;
+const OPERAND_REGISTER: usize = 0x00;
+const OPCODE_REGISTER: usize = 0x10;
+const RESULT_REGISTER: usize = 0x20;
 
 pub type FpReg = [u8; 16];
 

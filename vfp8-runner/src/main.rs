@@ -1,7 +1,7 @@
 use std::time::Instant;
 
-use soft_fp8::{multiplication::multiply};
-use vfp8_driver::{FpReg, Vfp8Accelerator, Vfp8Operator, ops::DoubleOperandExpr};
+use soft_fp8::multiplication::fma;
+use vfp8_driver::{FpReg, Vfp8Accelerator, Vfp8Operator, ops::TripleOperandExpr};
 use vfp8_runner::fill_randoms;
 
 fn main() {
@@ -9,6 +9,8 @@ fn main() {
     fill_randoms(&mut ax);
     let mut bx = Vec::<FpReg>::with_capacity(100000);
     fill_randoms(&mut bx);
+    let mut cx = Vec::<FpReg>::with_capacity(100000);
+    fill_randoms(&mut cx);
 
     let mut rx = Vec::<FpReg>::with_capacity(100000);
 
@@ -16,14 +18,14 @@ fn main() {
     for i in 0..rx.capacity() {
         rx.push(
             [
-                multiply(&ax[i][0].into(), &bx[i][0].into()).0.into(),
-                multiply(&ax[i][1].into(), &bx[i][1].into()).0.into(),
-                multiply(&ax[i][2].into(), &bx[i][2].into()).0.into(),
-                multiply(&ax[i][3].into(), &bx[i][3].into()).0.into(),
-                multiply(&ax[i][4].into(), &bx[i][4].into()).0.into(),
-                multiply(&ax[i][5].into(), &bx[i][5].into()).0.into(),
-                multiply(&ax[i][6].into(), &bx[i][6].into()).0.into(),
-                multiply(&ax[i][7].into(), &bx[i][7].into()).0.into(),
+                fma(&ax[i][0].into(), &bx[i][0].into(), &cx[i][0].into()).0.into(),
+                fma(&ax[i][1].into(), &bx[i][1].into(), &cx[i][1].into()).0.into(),
+                fma(&ax[i][2].into(), &bx[i][2].into(), &cx[i][2].into()).0.into(),
+                fma(&ax[i][3].into(), &bx[i][3].into(), &cx[i][3].into()).0.into(),
+                fma(&ax[i][4].into(), &bx[i][4].into(), &cx[i][4].into()).0.into(),
+                0.into(),
+                0.into(),
+                0.into(),
                 0.into(),
                 0.into(),
                 0.into(),
@@ -48,16 +50,13 @@ fn main() {
     let t1 = Instant::now();
     for i in 0..rx.capacity() {
         rx[i] = device.compute(
-            &DoubleOperandExpr::construct(
-                Vfp8Operator::Subtract,
-                ax[i][0].into(), bx[i][0].into(),
-                ax[i][1].into(), bx[i][1].into(),
-                ax[i][2].into(), bx[i][2].into(),
-                ax[i][3].into(), bx[i][3].into(),
-                ax[i][4].into(), bx[i][4].into(),
-                ax[i][5].into(), bx[i][5].into(),
-                ax[i][6].into(), bx[i][6].into(),
-                ax[i][7].into(), bx[i][7].into()
+            TripleOperandExpr::construct(
+                Vfp8Operator::Fma,
+                ax[i][0].into(), bx[i][0].into(), cx[i][0].into(),
+                ax[i][1].into(), bx[i][1].into(), cx[i][1].into(),
+                ax[i][2].into(), bx[i][2].into(), cx[i][2].into(),
+                ax[i][3].into(), bx[i][3].into(), cx[i][3].into(),
+                ax[i][4].into(), bx[i][4].into(), cx[i][4].into()
             ).unwrap()
         ).unwrap()
     }

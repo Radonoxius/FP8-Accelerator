@@ -1,6 +1,6 @@
 use soft_fp8::Fp8;
 
-use crate::{OPCODE_REGISTER_OFFSET, OPERAND_REGISTER_OFFSET, RESULT_REGISTER_OFFSET, FpReg, Vfp8Accelerator, Vfp8Operator, errors::DriverError};
+use crate::{OPCODE_REGISTER, OPERAND_REGISTER, RESULT_REGISTER, FpReg, Vfp8Accelerator, Vfp8Operator, errors::DriverError};
 
 static mut OPCODE_CACHE: Vfp8Operator = Vfp8Operator::Idle;
 
@@ -219,7 +219,7 @@ unsafe impl Vfp8Expression for TripleOperandExpr {
 impl Vfp8Accelerator {
     ///Dispatches the expression to the vfp8 accelerator, evaluates it and returns the result.
     #[allow(private_bounds)]
-    pub fn compute(&mut self, expr: &impl Vfp8Expression) -> Option<FpReg> {
+    pub fn compute(&mut self, expr: impl Vfp8Expression) -> Option<FpReg> {
         unsafe {
             let reg_pair = expr.as_raw();
 
@@ -229,11 +229,11 @@ impl Vfp8Accelerator {
                 _ => {
                     if expr.operator() != OPCODE_CACHE {
                         OPCODE_CACHE = expr.operator();
-                        self.write_to(OPCODE_REGISTER_OFFSET, reg_pair[1]);
+                        self.write_to(OPCODE_REGISTER, reg_pair[1]);
                     }
                     
-                    self.write_to(OPERAND_REGISTER_OFFSET, reg_pair[0]);
-                    Some(self.read_from(RESULT_REGISTER_OFFSET))
+                    self.write_to(OPERAND_REGISTER, reg_pair[0]);
+                    Some(self.read_from(RESULT_REGISTER))
                 }
             }
         }
