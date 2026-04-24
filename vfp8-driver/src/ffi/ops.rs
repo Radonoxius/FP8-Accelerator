@@ -67,7 +67,7 @@ pub unsafe extern "C" fn compute_inverse(
 }
 
 #[unsafe(no_mangle)]
-pub unsafe fn compute(
+pub unsafe extern "C" fn compute(
     device: *mut Vfp8Accelerator,
     operator: Vfp8Operator,
 
