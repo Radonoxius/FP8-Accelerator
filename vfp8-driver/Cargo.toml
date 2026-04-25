@@ -3,9 +3,6 @@ name = "vfp8-driver"
 version = "0.1.0"
 edition = "2024"
 
-[lib]
-crate-type = ["lib"]
-
 [dependencies]
 libc = "0.2.185"
 soft-fp8 = { path = "../" }
