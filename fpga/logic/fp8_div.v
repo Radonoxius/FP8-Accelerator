@@ -91,11 +91,11 @@ module fp8_div(
 
     wire [3:0] exp_bits = $unsigned(result_exp + 7);
 
-    assign P = (flag_nan_A || flag_nan_B) ? 8'h7F :                  
-               (flag_z_A && flag_z_B)     ? 8'h7F :                 
+    assign P = (flag_nan_A || flag_nan_B) ? [result_sign, 7'h7F] :                  
+               (flag_z_A && flag_z_B)     ? {result_sign, 7'h7F} :                 
                (flag_z_B)                 ? {result_sign, 7'h7F} :   
                (flag_z_A)                 ? {result_sign, 7'h00} : 
-               (result_exp > 8)           ? 8'h7F :                  
+               (result_exp > 8)           ? {result_sign, 7'h7F} :                  
                (result_exp < -6)          ? {result_sign, 7'h00} :   
                (result_exp == -6 && abs_mant < 8) ? {result_sign, 4'd0, abs_mant[2:0]} : 
                (exp_bits == 15 && abs_mant[2:0] == 3'd7) ? {result_sign, 4'd15, 3'd6} :  
