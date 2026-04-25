@@ -4,7 +4,7 @@ version = "0.1.1"
 edition = "2024"
 
 [lib]
-crate-type = ["lib", "staticlib"]
+crate-type = ["lib"]
 
 [dependencies]
 libc = "0.2.185"
