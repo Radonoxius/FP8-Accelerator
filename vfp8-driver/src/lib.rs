@@ -1,9 +1,8 @@
 use std::{ffi::c_void, ptr::null_mut};
 
 pub mod errors;
-pub mod mem;
+pub(crate) mod mem;
 pub mod ops;
-pub mod ffi;
 
 use libc::{MAP_FAILED, MAP_POPULATE, MAP_SHARED, MAP_SYNC, O_RDWR, O_SYNC, PROT_READ, PROT_WRITE, close, mmap, munmap, open};
 
