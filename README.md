@@ -21,7 +21,7 @@ You also need to have Linux 3.x (no GUI) installed on the DE1-SoC for this proje
 Also make sure to set all the `MSEL` switches to zero.
 
 ## Accuracy & Performance
-You can expect 85% to 92% accuracy depending on the operation in calculations, while using VFP8.
+You can expect 83% to 92% accuracy depending on the operation in calculations, while using VFP8.
 
 The accuracy metric is obtained by comparing 32 bit float results on the `FPU` found in consumer laptops,
 with our implementations.
@@ -29,7 +29,11 @@ with our implementations.
 As far as performance is concerned, the speed of calculations using VFP8 is on par/slightly faster than the
 FP8 soft-arithmetic done on Single Core of Cortex-A9 with maximum optimisations and `LTO` applied
 
-As of now, `1 MFLOPS` is the approximate (DMAS) throughput of VFP8.
+`1 MFLOPS` is the approximate (DMAS) throughput of VFP8.
+
+## Usage
+There is a very simple application in the `sample` folder that demonstrates how the VFP8 accelerator
+is used and showcases a subset of the driver API.
 
 ## Limitations
 As said, this is a very simple and naive implementation. These are the current limitations:
@@ -54,7 +58,7 @@ To build Rust code, you require
 Bash and Linux is optional, but nice to have.
 
 To build the raw binary file for the FPGA, you require
-+ Quartus Prime Lite
++ Quartus Prime Lite v25
 
 ## Project Members
 Nimesh R Acharya _aka Radonoxius_ : 241EC137,

@@ -1,16 +1,18 @@
 use std::time::Instant;
 
-use soft_fp8::division::inverse_divide;
-use vfp8_driver::{FpReg, Vfp8Accelerator, Vfp8Operator, ops::SingleOperandExpr};
-use vfp8_runner::fill_randoms;
+use soft_fp8::{Fp8, division::inverse_divide};
+use vfp8_driver::{Vfp8Accelerator, Vfp8Operator, ops::SingleOperandExpr};
+use test_runner::{fill_randoms, generate_randoms};
 
 fn main() {
-    let mut ax = Vec::<FpReg>::with_capacity(100000);
+    println!("Generating pseudorandom Fp8 values...");
+    let mut ax = Vec::<[Fp8; 16]>::with_capacity(100000);
     fill_randoms(&mut ax);
-    let mut bx = Vec::<FpReg>::with_capacity(100000);
+    let mut bx = Vec::<[Fp8; 16]>::with_capacity(100000);
     fill_randoms(&mut bx);
+    println!("Finished generation\n");
 
-    let mut rx = Vec::<FpReg>::with_capacity(100000);
+    let mut rx = Vec::<[Fp8; 16]>::with_capacity(100000);
 
     let t1 = Instant::now();
     for i in 0..rx.capacity() {
@@ -38,9 +40,15 @@ fn main() {
     let t2 = t1.elapsed();
     println!("Soft Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}", rx[0]);
-    println!("{:?}", rx[1]);
-    println!("{:?}\n", rx[2]);
+    println!("\nChoosing 3 random test indices...\n");
+    let random_indices = generate_randoms();
+    let i1 = unsafe { *((&raw const random_indices as usize + 0) as *const u16) } as usize;
+    let i2 = unsafe { *((&raw const random_indices as usize + 2) as *const u16) } as usize;
+    let i3 = unsafe { *((&raw const random_indices as usize + 4) as *const u16) } as usize;
+
+    println!("\n{:?}", rx[i1]);
+    println!("{:?}", rx[i2]);
+    println!("{:?}\n", rx[i3]);
 
 
     let mut device = Vfp8Accelerator::take().unwrap();
@@ -50,21 +58,21 @@ fn main() {
         rx[i] = device.compute(
             SingleOperandExpr::construct(
                 Vfp8Operator::Inverse,
-                ax[i][0].into(), ax[i][1].into(),
-                ax[i][2].into(), ax[i][3].into(),
-                ax[i][4].into(), ax[i][5].into(),
-                ax[i][6].into(), ax[i][7].into(),
-                ax[i][8].into(), ax[i][9].into(),
-                ax[i][10].into(), ax[i][11].into(),
-                ax[i][12].into(), ax[i][13].into(),
-                ax[i][14].into(), ax[i][15].into(),
+                ax[i][0], ax[i][1],
+                ax[i][2], ax[i][3],
+                ax[i][4], ax[i][5],
+                ax[i][6], ax[i][7],
+                ax[i][8], ax[i][9],
+                ax[i][10], ax[i][11],
+                ax[i][12], ax[i][13],
+                ax[i][14], ax[i][15],
             ).unwrap()
         ).unwrap()
     }
     let t2 = t1.elapsed();
     println!("Hard Impl. took {} ms.", t2.as_millis());
 
-    println!("\n{:?}", rx[0]);
-    println!("{:?}", rx[1]);
-    println!("{:?}\n", rx[2]);
+    println!("\n{:?}", rx[i1]);
+    println!("{:?}", rx[i2]);
+    println!("{:?}\n", rx[i3]);
 }

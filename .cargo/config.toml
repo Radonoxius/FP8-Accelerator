@@ -1,19 +1,16 @@
 [alias]
 b = "build --all"
 br = "build --release --all"
-r = "run"
-rr = "run --release"
-accu-check = "run --release --bin accu-check"
+accu-check = "run --release --package accu-check"
 
-#[build]
-#target = "armv7-unknown-linux-musleabihf"
-#
-#[target.armv7-unknown-linux-musleabihf]
-#linker = "clang"
-#rustflags = [
-#    "-C", "link-arg=--target=arm-linux-musleabihf",
-#    "-C", "link-arg=-fuse-ld=lld",
-#
-#    "-C", "target-cpu=cortex-a9",
-#    "-C", "target-feature=+neon,+vfp3"
-#]
+[build]
+target = "armv7-unknown-linux-musleabihf"
+
+[target.armv7-unknown-linux-musleabihf]
+linker = "clang"
+rustflags = [
+    "-C", "link-arg=--target=arm-linux-musleabihf",
+    "-C", "link-arg=-fuse-ld=lld",
+
+    "-C", "target-cpu=cortex-a9"
+]

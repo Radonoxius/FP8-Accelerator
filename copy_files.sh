@@ -6,7 +6,7 @@ ME=$(whoami)
 RUST_BUILD_DIR='target/armv7-unknown-linux-musleabihf'
 FPGA_BUILD_DIR='fpga/'
 
-RBF_NAME='controller'
+RBF_NAME='vfp8'
 
 #Verify these 2 statements below before running!
 DISK='sdb2'

@@ -2,11 +2,13 @@
 name = "soft-fp8"
 version = "0.1.0"
 edition = "2024"
-default-run = "soft-fp8"
+
+[lib]
+crate-type = ["lib"]
 
 [workspace]
 resolver = "3"
-members = ["vfp8-driver", "vfp8-runner"]
+members = ["vfp8-driver", "test-runner", "sample", "accu-check"]
 
 [profile.release]
 lto = "fat"

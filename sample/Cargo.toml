@@ -1,11 +1,8 @@
 [package]
-name = "vfp8-driver"
+name = "sample"
 version = "0.1.0"
 edition = "2024"
 
-[lib]
-crate-type = ["lib"]
-
 [dependencies]
-libc = "0.2.185"
+vfp8-driver = { path = "../vfp8-driver" }
 soft-fp8 = { path = "../" }
