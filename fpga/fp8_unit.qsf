@@ -259,14 +259,12 @@ set_instance_assignment -name IO_STANDARD "SSTL-15 CLASS I" -to HPS_DDR3_DM[0] -
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION" -to HPS_DDR3_DM[0] -tag __hps_sdram_p0
 
 set_global_assignment -name BOARD "DE1-SoC Board"
-set_global_assignment -name VERILOG_FILE logic/opUnit3.v
 set_global_assignment -name VERILOG_FILE logic/opUnit1.v
 set_global_assignment -name VERILOG_FILE logic/vecUnit.v
 set_global_assignment -name QIP_FILE system/synthesis/system.qip
 set_global_assignment -name VERILOG_FILE logic/opUnit2.v
 set_global_assignment -name VERILOG_FILE logic/controller.v
 set_global_assignment -name VERILOG_FILE logic/fp8_idiv.v
-set_global_assignment -name VERILOG_FILE logic/fp8_fma.v
 set_global_assignment -name VERILOG_FILE logic/fp8_div.v
 set_global_assignment -name VERILOG_FILE logic/fp8_mul.v
 set_global_assignment -name VERILOG_FILE logic/fp8_sub.v
