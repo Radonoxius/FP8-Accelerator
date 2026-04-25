@@ -185,38 +185,14 @@ pub fn divide(a: &Fp8, b: &Fp8) -> (Fp8, State) {
 
     let mut result_exp = a_exp - b_exp - 4;
     let mut full_mant = raw_quot;
-    let mut lost_bit = false;
 
-    // Normalization phase to align the MSB correctly
-    if full_mant >= 8192 {
-        lost_bit = (full_mant & 0x7F) != 0;
-        full_mant >>= 7;
-        result_exp += 7;
-    } else if full_mant >= 4096 {
-        lost_bit = (full_mant & 0x3F) != 0;
-        full_mant >>= 6;
-        result_exp += 6;
-    } else if full_mant >= 2048 {
-        lost_bit = (full_mant & 0x1F) != 0;
-        full_mant >>= 5;
-        result_exp += 5;
-    } else if full_mant >= 1024 {
-        lost_bit = (full_mant & 0x0F) != 0;
-        full_mant >>= 4;
-        result_exp += 4;
-    } else if full_mant >= 512 {
-        lost_bit = (full_mant & 0x07) != 0;
-        full_mant >>= 3;
-        result_exp += 3;
-    } else if full_mant >= 256 {
-        lost_bit = (full_mant & 0x03) != 0;
-        full_mant >>= 2;
-        result_exp += 2;
-    } else if full_mant >= 128 {
-        lost_bit = (full_mant & 0x01) != 0;
+    let mut lost_mask = 0;
+    while full_mant >= 128 {
+        lost_mask = (lost_mask >> 1) | (full_mant & 0x01);
         full_mant >>= 1;
         result_exp += 1;
     }
+    let mut lost_bit = lost_mask != 0;
 
     // Subnormal alignment loop
     while result_exp < -6 && full_mant > 0 {
