@@ -1,7 +1,7 @@
-use soft_fp8::{Fp8, division::{divide, inverse_divide}};
+use soft_fp8::{Fp8, division::divide};
 
 fn main() {
-    Fp8::print_as_csv1(
-        inverse_divide
+    Fp8::print_as_csv2(
+        divide
     );
 }
