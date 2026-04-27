@@ -16,11 +16,11 @@ const OPERAND_REGISTER: usize = 0x00;
 const OPCODE_REGISTER: usize = 0x10;
 const RESULT_REGISTER: usize = 0x20;
 
+///Represents a raw VFP8 register
 pub type FpReg = [u8; 16];
 
 ///Represents the vfp8 accelerator device
 #[derive(Debug)]
-#[repr(C)]
 pub struct Vfp8Accelerator {
     pub(crate) base_addr: *mut u32,
     mem_fd: i32
@@ -73,12 +73,12 @@ impl Drop for Vfp8Accelerator {
 ///Represents the arithmetic operator used in mathematical expressions,
 ///that are supported by the vfp8 accelerator
 #[derive(Debug, Clone, Copy, PartialEq)]
-#[repr(C)]
 pub enum Vfp8Operator {
     Add,
     Subtract,
     Multiply,
     Divide,
+    
     Inverse,
 
     Idle

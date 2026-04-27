@@ -1,9 +1,0 @@
-[package]
-name = "vfp8-runner"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-vfp8-driver = { path = "../vfp8-driver" }
-soft-fp8 = { path = "../" }
-libc = "0.2.185"

@@ -16,7 +16,6 @@ pub mod division;
 ///
 ///**NOTE**: No subnormal arithmetic support.
 #[derive(Clone, Copy)]
-#[repr(C)]
 pub struct Fp8 {
     pub(crate) byte: u8
 }
@@ -216,43 +215,6 @@ impl Fp8 {
         }
     }
 
-    #[deprecated(note = "Not planned to be used.")]
-    pub fn print_differs(
-        percent_tolerance: f32,
-
-        f_impl: fn(&Fp8, &Fp8) -> (Fp8, State),
-        f_fpu: fn(f32, f32) -> f32
-    ) {
-        for i in 0b0000_0000..=0b1111_1111 {
-            let a = Fp8::from(i);
-
-            for j in 0b0000_0000..=0b1111_1111 {
-                let b = Fp8::from(j);
-
-                let (r, s) = f_impl(&a, &b);
-
-                let fpu_r = f_fpu(Into::<f32>::into(a), Into::<f32>::into(b));
-                let e = percent_tolerance * fpu_r / 100.0;
-
-                let r_c: f32 = r.into();
-
-                let in_range = f32::abs(fpu_r) - f32::abs(e) < f32::abs(r_c) &&
-                    f32::abs(r_c) < f32::abs(fpu_r) + f32::abs(e);
-                let equals = r_c == fpu_r;
-
-                if !(in_range || equals) && s != State::NaN {
-                    println!(
-                        "{}, {}, {}, FPU: {}",
-                        Into::<f32>::into(a),
-                        Into::<f32>::into(b),
-                        Into::<f32>::into(r),
-                        f_fpu(Into::<f32>::into(a), Into::<f32>::into(b))
-                    );
-                }
-            }
-        }
-    }
-
     pub fn print_as_csv1(f: fn(&Fp8) -> (Fp8, State)) {
         for i in 0..=255 {
             println!(
@@ -272,22 +234,6 @@ impl Fp8 {
                     j,
                     Into::<u8>::into(f(&Fp8::from(i), &Fp8::from(j)).0)
                 );
-            }
-        }
-    }
-
-    pub fn print_as_csv3(f: fn(&Fp8, &Fp8, &Fp8) -> (Fp8, State)) {
-        for i in 0..=255 {
-            for j in 0..=255 {
-                for k in 0..=255 {
-                    println!(
-                        "{:08b},{:08b},{:08b},{:08b}",
-                        i,
-                        j,
-                        k,
-                        Into::<u8>::into(f(&Fp8::from(i), &Fp8::from(j), &Fp8::from(k)).0)
-                    );
-                }
             }
         }
     }

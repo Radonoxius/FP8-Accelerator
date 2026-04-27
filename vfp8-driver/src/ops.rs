@@ -154,7 +154,7 @@ unsafe impl Vfp8Expression for DoubleOperandExpr {
 impl Vfp8Accelerator {
     ///Dispatches the expression to the vfp8 accelerator, evaluates it and returns the result.
     #[allow(private_bounds)]
-    pub fn compute(&mut self, expr: impl Vfp8Expression) -> Option<FpReg> {
+    pub fn compute(&mut self, expr: impl Vfp8Expression) -> Option<[Fp8; 16]> {
         unsafe {
             let reg_pair = expr.as_raw();
 
@@ -168,7 +168,14 @@ impl Vfp8Accelerator {
                     }
                     
                     self.write_to(OPERAND_REGISTER, reg_pair[0]);
-                    Some(self.read_from(RESULT_REGISTER))
+                    let res = self.read_from(RESULT_REGISTER);
+
+                    Some([
+                        res[0].into(), res[1].into(), res[2].into(), res[3].into(),
+                        res[4].into(), res[5].into(), res[6].into(), res[7].into(),
+                        res[8].into(), res[9].into(), res[10].into(), res[11].into(),
+                        res[12].into(), res[13].into(), res[14].into(), res[15].into()
+                    ])
                 }
             }
         }
