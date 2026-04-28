@@ -21,7 +21,7 @@ You also need to have Linux 3.x (no GUI) installed on the DE1-SoC for this proje
 Also make sure to set all the `MSEL` switches to zero.
 
 ## Accuracy & Performance
-You can expect 83% to 92% accuracy depending on the operation in calculations, while using VFP8.
+You can expect 78% to 92% accuracy depending on the operation in calculations, while using VFP8.
 
 The accuracy metric is obtained by comparing 32 bit float results on the `FPU` found in consumer laptops,
 with our implementations.
@@ -57,8 +57,12 @@ To build Rust code, you require
 
 Bash and Linux is optional, but nice to have.
 
-To build the raw binary file for the FPGA, you require
-+ Quartus Prime Lite v25
+If you want access to the complete VFP8 (Quartus) project,
+please contact the project members personally. We cant provide the
+full project on GitHub due to license restrictions.
+
+The Verilog modules we designed are covered under
+the project license.
 
 ## Project Members
 Nimesh R Acharya _aka Radonoxius_ : 241EC137,
